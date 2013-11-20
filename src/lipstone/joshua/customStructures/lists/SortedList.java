@@ -40,8 +40,9 @@ public class SortedList<T> extends ArrayList<T> {
 	 * If the comparator is null, this effectively becomes a Stack.<br>
 	 * This sorts in descending order. That is, the items with the lower value appear at the end of the list.
 	 * 
-	 * @param comparator
-	 *            the comparator to sort this list with
+	 * @param method
+	 *            the method by which to sort this list
+	 * @see SortingMethod
 	 */
 	public SortedList(SortingMethod method) {
 		this.comparator = (Comparator<T>) method.getSort();
