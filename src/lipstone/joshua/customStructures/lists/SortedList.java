@@ -182,6 +182,17 @@ public class SortedList<T> extends ArrayList<T> {
 			quickSort(0, size() - 1);
 	}
 	
+	@Override
+	public int indexOf(Object element) {
+		int item = getPos((T) element, 0, size());
+		return comparator.compare(get(item), (T) element) == 0 ? item : -1;
+	}
+	
+	@Override
+	public boolean contains(Object element) {
+		return indexOf(element) != -1;
+	}
+	
 	private int getPos(T element, int left, int right) {
 		if (left == right)
 			return left;

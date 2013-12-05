@@ -52,6 +52,10 @@ public class EqualsMap<T, V> implements Iterable<T>, Comparable<EqualsMap<T, V>>
 			return backend.set(index, value);
 		}
 		
+		boolean add0(K value) {
+			return backend.add(value);
+		}
+		
 		@Override
 		public Iterator<K> iterator() {
 			return new Iterator<K>() {
@@ -120,8 +124,8 @@ public class EqualsMap<T, V> implements Iterable<T>, Comparable<EqualsMap<T, V>>
 	public V put(T key, V value) {
 		int index = keys.indexOf(key);
 		if (index < 0) {
-			keys.add(key);
-			values.add(value);
+			keys.add0(key);
+			values.add0(value);
 			return value;
 		}
 		keys.set(index, key);

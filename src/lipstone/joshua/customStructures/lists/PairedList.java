@@ -155,11 +155,15 @@ public class PairedList<T, V> implements Iterable<T>, Comparable<PairedList<T, V
 		return keys.size();
 	}
 	
+	public boolean containsKey(T key) {
+		return keys.indexOf(key) > -1;
+	}
+	
 	@Override
 	public String toString() {
 		String output = "";
-		for (T key : keys)
-			output = output + "<" + key.toString() + ", " + get(key).toString() + ">, ";
+		for (int i = 0; i < keys.size(); i++)
+			output = output + "<" + keys.get(i).toString() + ", " + values.get(i).toString() + ">, ";
 		if (output.endsWith(", "))
 			output = output.substring(0, output.length() - 2);
 		return output;
