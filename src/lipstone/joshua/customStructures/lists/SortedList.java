@@ -185,6 +185,8 @@ public class SortedList<T> extends ArrayList<T> {
 	@Override
 	public int indexOf(Object element) {
 		int item = getPos((T) element, 0, size());
+		if (item == size())
+			return -1;
 		return comparator.compare(get(item), (T) element) == 0 ? item : -1;
 	}
 	
@@ -313,7 +315,7 @@ enum SortingMethod {
 		
 		@Override
 		public int compare(String o1, String o2) {
-			return o1.length() > o2.length() ? 1 : (o1.length() == o2.length() ? o1.compareTo(o2) : -1);
+			return o2.length() > o1.length() ? 1 : (o1.length() == o2.length() ? o1.compareTo(o2) : -1);
 		}
 	}),
 	NUMERIC_ASCENDING(new Comparator<Number>() {
