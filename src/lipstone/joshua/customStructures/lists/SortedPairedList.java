@@ -19,6 +19,9 @@ public class SortedPairedList<K extends Comparable<K>, V> implements Iterable<K>
 	
 	/**
 	 * Constructs a new <tt>SortedPairedList</tt>
+	 * 
+	 * @param keySorter
+	 *            the {@link java.util.Comparator Comparator} used to sort the keys.
 	 */
 	public SortedPairedList(Comparator<K> keySorter) {
 		keys = new SortedList<K>(keySorter);
@@ -65,7 +68,7 @@ public class SortedPairedList<K extends Comparable<K>, V> implements Iterable<K>
 	
 	/**
 	 * Adds the given key to this <tt>SortedPairedList</tt> at the given index with the given value, and shifts all elements
-	 * with indecies >= i to the right
+	 * with indecies {@literal >=} i to the right
 	 * 
 	 * @param i
 	 *            the index

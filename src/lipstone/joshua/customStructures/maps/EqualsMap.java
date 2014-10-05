@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Functions similarly to a <tt>HashMap</tt>, but uses equality to map keys to values instead of hash codes.</br> Guarantees
- * that the order of the map will be the same as the order that items were put in the map.
+ * Functions similarly to a <tt>HashMap</tt>, but uses equality to map keys to values instead of hash codes.<br>
+ * Guarantees that the order of the map will be the same as the order that items were put in the map.
  * 
  * @author Joshua Lipstone
  * @param <T>
@@ -120,6 +120,7 @@ public class EqualsMap<T, V> implements Iterable<T>, Comparable<EqualsMap<T, V>>
 	 *            the key to set the value of
 	 * @param value
 	 *            the value to set the key to
+	 * @return the replaced value
 	 */
 	public V put(T key, V value) {
 		int index = keys.indexOf(key);

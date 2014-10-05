@@ -65,7 +65,7 @@ public class PairedList<K, V> implements Iterable<K>, Comparable<PairedList<K, V
 	
 	/**
 	 * Adds the given key to this <tt>PairedList</tt> at the given index with the given value, and shifts all elements with
-	 * indecies >= i to the right
+	 * indecies {@literal >= i to the right}
 	 * 
 	 * @param i
 	 *            the index
