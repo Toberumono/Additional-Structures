@@ -8,45 +8,13 @@ import java.util.Comparator;
  * This class implements a sorted list. It is constructed with a comparator that can compare two objects and sorts objects
  * accordingly. When you add an object to the list, it is inserted in the correct place. Objects that are equal according to
  * the comparator will be sorted by the order in which they were inserted in the list.
+ * 
+ * @author Joshua Lipstone
+ * @see lipstone.joshua.customStructures.SortingMethods SortingMethods
  */
-public class SortedList<T> extends ArrayList<T> {
+public class SortedList<T extends Comparable<T>> extends ArrayList<T> {
 	private final Comparator<T> comparator;
 	private boolean sortingEnabled = true;
-	
-	public static final SortingMethod STRING_ALPHABETICAL_ASCENDING = SortingMethod.STRING_ALPHABETICAL_ASCENDING;
-	public static final SortingMethod STRING_ALPHABETICAL_DESCENDING = SortingMethod.STRING_ALPHABETICAL_DESCENDING;
-	public static final SortingMethod STRING_LENGTH_ASCENDING = SortingMethod.STRING_LENGTH_ASCENDING;
-	public static final SortingMethod STRING_LENGTH_DESCENDING = SortingMethod.STRING_LENGTH_DESCENDING;
-	public static final SortingMethod NUMERIC_ASCENDING = SortingMethod.NUMERIC_ASCENDING;
-	public static final SortingMethod NUMERIC_DESCENDING = SortingMethod.NUMERIC_DESCENDING;
-	
-	/**
-	 * Constructs a new sorted list with the specified initialCapacity and comparator.<br>
-	 * This sorts in descending order. That is, the items with the lower value appear at the end of the list.
-	 * 
-	 * @param initialCapacity
-	 *            the initial capacity of this list
-	 * @param method
-	 *            the method by which to sort this list
-	 * @see SortingMethod
-	 */
-	public SortedList(int initialCapacity, SortingMethod method) {
-		super(initialCapacity);
-		this.comparator = (Comparator<T>) method.getSort();
-	}
-	
-	/**
-	 * Constructs a new sorted list with the specified comparator.<br>
-	 * If the comparator is null, this effectively becomes a Stack.<br>
-	 * This sorts in descending order. That is, the items with the lower value appear at the end of the list.
-	 * 
-	 * @param method
-	 *            the method by which to sort this list
-	 * @see SortingMethod
-	 */
-	public SortedList(SortingMethod method) {
-		this.comparator = (Comparator<T>) method.getSort();
-	}
 	
 	/**
 	 * Constructs a new sorted list with the specified initialCapacity and comparator.<br>
@@ -169,6 +137,13 @@ public class SortedList<T> extends ArrayList<T> {
 	}
 	
 	/**
+	 * @return the {@link java.util.Comparator Comparator} used to sort the elements in this list.
+	 */
+	public Comparator<T> getComparator() {
+		return comparator;
+	}
+	
+	/**
 	 * Temporarily disables the automatic sorting of this list. Sorting will remain disabled until the next
 	 * {@link #enableSorting()} or {@link #get(int)} call, whichever comes first.
 	 */
@@ -271,79 +246,5 @@ public class SortedList<T> extends ArrayList<T> {
 		set(right, get(storeIndex));
 		set(storeIndex, pivotItem);
 		return storeIndex;
-	}
-	
-	@Override
-	public String toString() {
-		String output = "";
-		for (T element : this)
-			output = output + ", " + element;
-		if (output.length() > 2)
-			output = output.substring(2);
-		return "<" + output + ">";
-	}
-}
-
-/**
- * Various predefined {@link java.util.Comparator Comparators} for use with a {@link SortedList SortedList}
- * 
- * @author Joshua Lipstone
- */
-enum SortingMethod {
-	STRING_ALPHABETICAL_ASCENDING(new Comparator<String>() {
-		
-		@Override
-		public int compare(String o1, String o2) {
-			return o1.compareTo(o2);
-		}
-	}),
-	STRING_ALPHABETICAL_DESCENDING(new Comparator<String>() {
-		
-		@Override
-		public int compare(String o1, String o2) {
-			return o2.compareTo(o1);
-		}
-	}),
-	STRING_LENGTH_ASCENDING(new Comparator<String>() {
-		
-		@Override
-		public int compare(String o1, String o2) {
-			return o1.length() > o2.length() ? 1 : (o1.length() == o2.length() ? o1.compareTo(o2) : -1);
-		}
-	}),
-	STRING_LENGTH_DESCENDING(new Comparator<String>() {
-		
-		@Override
-		public int compare(String o1, String o2) {
-			return o2.length() > o1.length() ? 1 : (o1.length() == o2.length() ? o1.compareTo(o2) : -1);
-		}
-	}),
-	NUMERIC_ASCENDING(new Comparator<Number>() {
-		
-		@Override
-		public int compare(Number o1, Number o2) {
-			if (o1 instanceof Long && o2 instanceof Long)
-				return ((Long) o1).compareTo((Long) o2);
-			return o1.doubleValue() > o2.doubleValue() ? 1 : o1.doubleValue() == o2.doubleValue() ? 0 : -1;
-		}
-	}),
-	NUMERIC_DESCENDING(new Comparator<Number>() {
-		
-		@Override
-		public int compare(Number o1, Number o2) {
-			if (o1 instanceof Long && o2 instanceof Long)
-				return ((Long) o2).compareTo((Long) o1);
-			return o2.doubleValue() > o1.doubleValue() ? 1 : (o1.doubleValue() == o2.doubleValue() ? 0 : -1);
-		}
-	});
-	
-	private final Comparator<?> sort;
-	
-	SortingMethod(Comparator<?> sort) {
-		this.sort = sort;
-	}
-	
-	public Comparator<?> getSort() {
-		return sort;
 	}
 }

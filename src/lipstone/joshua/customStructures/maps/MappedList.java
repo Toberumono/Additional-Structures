@@ -15,7 +15,7 @@ import lipstone.joshua.customStructures.lists.SortedList;
  * @param <V>
  *            the value type
  */
-public class MappedList<T, V> {
+public class MappedList<T, V extends Comparable<V>> {
 	private TreeMap<T, SortedList<V>> map;
 	private Comparator<V> valueComparator;
 	
@@ -27,6 +27,7 @@ public class MappedList<T, V> {
 	 *            the comparator to sort the keys with
 	 * @param valueComparator
 	 *            the comparator to sort the values with
+	 * @see lipstone.joshua.customStructures.SortingMethods SortingMethods
 	 */
 	public MappedList(Comparator<T> keyComparator, Comparator<V> valueComparator) {
 		this.valueComparator = valueComparator;
@@ -39,6 +40,7 @@ public class MappedList<T, V> {
 	 * 
 	 * @param keyComparator
 	 *            the comparator to sort the keys with
+	 * @see lipstone.joshua.customStructures.SortingMethods SortingMethods
 	 */
 	public MappedList(Comparator<T> keyComparator) {
 		this(keyComparator, null);

@@ -4,22 +4,24 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * A set of ArrayLists that are kept in synch. This does allow for multiple values per key and duplicate values, even under
+ * A pair of ArrayLists that are kept in sync. This does allow for multiple values per key and duplicate values, even under
  * the same key.
  * 
  * @author Joshua Lipstone
- * @param <T>
+ * @param <K>
+ *            the key type
  * @param <V>
+ *            the value type
  */
-public class PairedList<T, V> implements Iterable<T>, Comparable<PairedList<T, V>> {
-	private ArrayList<T> keys;
+public class PairedList<K, V> implements Iterable<K>, Comparable<PairedList<K, V>> {
+	private ArrayList<K> keys;
 	private ArrayList<V> values;
 	
 	/**
 	 * Constructs a new <tt>PairedList</tt>
 	 */
 	public PairedList() {
-		keys = new ArrayList<T>();
+		keys = new ArrayList<K>();
 		values = new ArrayList<V>();
 	}
 	
@@ -29,18 +31,15 @@ public class PairedList<T, V> implements Iterable<T>, Comparable<PairedList<T, V
 	 * @param list
 	 *            the <tt>PairedList</tt> containing the values that this list should start with
 	 */
-	public PairedList(PairedList<T, V> list) {
-		this();
-		for (T key : list.keys)
-			keys.add(key);
-		for (V value : list.values)
-			values.add(value);
+	public PairedList(PairedList<K, V> list) {
+		keys = new ArrayList<>(list.keys);
+		values = new ArrayList<>(list.values);
 	}
 	
 	/**
 	 * @return the list of keys in this <tt>PairedList</tt>
 	 */
-	public ArrayList<T> getKeys() {
+	public ArrayList<K> getKeys() {
 		return keys;
 	}
 	
@@ -59,7 +58,7 @@ public class PairedList<T, V> implements Iterable<T>, Comparable<PairedList<T, V
 	 * @param value
 	 *            the value
 	 */
-	public void add(T key, V value) {
+	public void add(K key, V value) {
 		keys.add(key);
 		values.add(value);
 	}
@@ -75,7 +74,7 @@ public class PairedList<T, V> implements Iterable<T>, Comparable<PairedList<T, V
 	 * @param value
 	 *            the value
 	 */
-	public void add(int i, T key, V value) {
+	public void add(int i, K key, V value) {
 		keys.add(i, key);
 		values.add(i, value);
 	}
@@ -85,7 +84,7 @@ public class PairedList<T, V> implements Iterable<T>, Comparable<PairedList<T, V
 	 *            the key to get the value of
 	 * @return the values associated with the key if the key is in the <tt>PairedList</tt>, otherwise empty list
 	 */
-	public ArrayList<V> get(T key) {
+	public ArrayList<V> get(K key) {
 		ArrayList<V> output = new ArrayList<>();
 		for (int i = 0; i < keys.size(); i++)
 			if (keys.get(i).equals(key))
@@ -98,8 +97,8 @@ public class PairedList<T, V> implements Iterable<T>, Comparable<PairedList<T, V
 	 *            the value
 	 * @return all the keys in this <tt>PairedList</tt> that are paired with the given value
 	 */
-	public ArrayList<T> getByValue(V value) {
-		ArrayList<T> output = new ArrayList<>();
+	public ArrayList<K> getByValue(V value) {
+		ArrayList<K> output = new ArrayList<>();
 		for (int i = 0; i < values.size(); i++)
 			if (values.get(i).equals(value))
 				output.add(keys.get(i));
@@ -125,7 +124,7 @@ public class PairedList<T, V> implements Iterable<T>, Comparable<PairedList<T, V
 	 *            the key to remove
 	 * @return the value mapped to the key or null if the key was not in the list
 	 */
-	public V remove(T key) {
+	public V remove(K key) {
 		int index = keys.indexOf(key);
 		keys.remove(index);
 		return values.remove(index);
@@ -138,7 +137,7 @@ public class PairedList<T, V> implements Iterable<T>, Comparable<PairedList<T, V
 	 *            the key
 	 * @return the removed values as an ArrayList, otherwise an empty list
 	 */
-	public ArrayList<V> removeAll(T key) {
+	public ArrayList<V> removeAll(K key) {
 		ArrayList<V> output = new ArrayList<V>();
 		for (int i = 0; i < keys.size(); i++)
 			if (keys.get(i).equals(key)) {
@@ -155,7 +154,7 @@ public class PairedList<T, V> implements Iterable<T>, Comparable<PairedList<T, V
 		return keys.size();
 	}
 	
-	public boolean containsKey(T key) {
+	public boolean containsKey(K key) {
 		return keys.indexOf(key) > -1;
 	}
 	
@@ -170,19 +169,19 @@ public class PairedList<T, V> implements Iterable<T>, Comparable<PairedList<T, V
 	}
 	
 	@Override
-	public Iterator<T> iterator() {
+	public Iterator<K> iterator() {
 		return keys.iterator();
 	}
 	
 	@Override
-	public int compareTo(PairedList<T, V> o) {
+	public int compareTo(PairedList<K, V> o) {
 		if (keys.size() > o.keys.size())
 			return 1;
 		if (keys.size() < o.keys.size())
 			return -1;
 		if (values.get(0) instanceof Comparable) {
 			int result = 0;
-			for (T key : keys) {
+			for (K key : keys) {
 				ArrayList<V> vals = get(key), oVals = o.get(key);
 				if (vals.size() > oVals.size())
 					result += 1;
