@@ -13,7 +13,7 @@ import java.util.Iterator;
  * @param <V>
  *            the value type
  */
-public class PairedList<K, V> implements Iterable<K>, Comparable<PairedList<K, V>> {
+public class PairedList<K, V> implements Iterable<K> {
 	private ArrayList<K> keys;
 	private ArrayList<V> values;
 	
@@ -171,28 +171,5 @@ public class PairedList<K, V> implements Iterable<K>, Comparable<PairedList<K, V
 	@Override
 	public Iterator<K> iterator() {
 		return keys.iterator();
-	}
-	
-	@Override
-	public int compareTo(PairedList<K, V> o) {
-		if (keys.size() > o.keys.size())
-			return 1;
-		if (keys.size() < o.keys.size())
-			return -1;
-		if (values.get(0) instanceof Comparable) {
-			int result = 0;
-			for (K key : keys) {
-				ArrayList<V> vals = get(key), oVals = o.get(key);
-				if (vals.size() > oVals.size())
-					result += 1;
-				else if (vals.size() < oVals.size())
-					result -= 1;
-				else
-					for (int i = 0; i < vals.size(); i++)
-						result += ((Comparable<V>) vals.get(i)).compareTo(oVals.get(i));
-			}
-			return result;
-		}
-		return 0;
 	}
 }

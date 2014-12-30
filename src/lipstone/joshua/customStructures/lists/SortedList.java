@@ -159,10 +159,20 @@ public class SortedList<T extends Comparable<T>> extends ArrayList<T> {
 	
 	@Override
 	public int indexOf(Object element) {
-		int item = getPos((T) element, 0, size());
+		return super.indexOf(element);
+	}
+	
+	/**
+	 * @param element
+	 *            the element to get the index of
+	 * @return the index of the first occurrence of the specified element in this list, or -1 if this list does not contain
+	 *         the element.
+	 */
+	public int indexOf(T element) {
+		int item = getPos(element, 0, size());
 		if (item == size())
 			return -1;
-		return comparator.compare(get(item), (T) element) == 0 ? item : -1;
+		return comparator.compare(get(item), element) == 0 ? item : -1;
 	}
 	
 	@Override

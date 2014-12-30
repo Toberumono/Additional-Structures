@@ -31,7 +31,7 @@ public class MappedList<T, V extends Comparable<V>> {
 	 */
 	public MappedList(Comparator<T> keyComparator, Comparator<V> valueComparator) {
 		this.valueComparator = valueComparator;
-		this.map = new TreeMap<T, SortedList<V>>(new KeyComparator(keyComparator));
+		this.map = new TreeMap<T, SortedList<V>>(keyComparator);
 	}
 	
 	/**
@@ -96,21 +96,5 @@ public class MappedList<T, V extends Comparable<V>> {
 		SortedList<V> temp = map.get(key);
 		temp.remove(value);
 		map.put(key, temp);
-	}
-	
-	class KeyComparator implements Comparator<Object> {
-		private Comparator<T> comparator;
-		
-		KeyComparator(Comparator<T> comparator) {
-			this.comparator = comparator;
-		}
-		
-		@Override
-		public int compare(Object o1, Object o2) {
-			if (!(o1 instanceof SortedList) && !(o2 instanceof SortedList)) //Basically, only SortedLists or keys will be passed to this, so if it isn't a SortedList, it is a key.
-				return comparator.compare((T) o1, (T) o2);
-			return 0;
-		}
-		
 	}
 }

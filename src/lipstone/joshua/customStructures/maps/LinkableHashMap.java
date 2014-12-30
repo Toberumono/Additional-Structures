@@ -179,7 +179,7 @@ public class LinkableHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 		public WrappedKeyIterator(Iterator<Map.Entry<K, Wrapper>> iterator) {
 			super(iterator);
 		}
-
+		
 		@Override
 		public K next() {
 			return nextEntry().getKey();
@@ -191,7 +191,7 @@ public class LinkableHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 		public WrappedValueIterator(Iterator<Map.Entry<K, Wrapper>> iterator) {
 			super(iterator);
 		}
-
+		
 		@Override
 		public V next() {
 			return nextEntry().getValue().getValue();
@@ -272,7 +272,7 @@ public class LinkableHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 		public WrappedEntrySetIterator(Iterator<Map.Entry<K, Wrapper>> iterator) {
 			super(iterator);
 		}
-
+		
 		@Override
 		public java.util.Map.Entry<K, V> next() {
 			return new WrappedEntry(nextEntry());
