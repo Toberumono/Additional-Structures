@@ -1,38 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="create jar" name="Create Runnable Jar for my CustomStructures project">
-	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
-	<!--ANT 1.7 is required                                        -->
+	<!--ANT 1.8.3 is required                                        -->
 
-	<property name="src" location="./src" />
-	<property name="bin" location="./bin" />
+	<property name="src" location="src" />
+	<property name="bin" location="bin" />
+	<property name="doc" location="doc" />
 
 	<target name="javadoc">
-		<javadoc access="protected" author="true" destdir="doc" packagenames="lipstone.joshua.customStructures.*" source="1.8" splitindex="true" use="true" version="true">
-			<fileset dir="src" defaultexcludes="no">
-				<exclude name="**/*.DS_Store" />
-			</fileset>
-		</javadoc>
+		<javadoc access="protected" author="true" destdir="${doc}" packagenames="lipstone.joshua.customStructures.*" source="1.8" splitindex="true" use="true" version="true" sourcepath="${src}" />
 	</target>
 
 	<target name="build">
 		<mkdir dir="${bin}" />
-		<javac srcdir="${src}" destdir="${bin}" includeAntRuntime="false">
-			<exclude name="**/*.DS_Store" />
-		</javac>
+		<javac srcdir="${src}" destdir="${bin}" includeAntRuntime="false" />
 	</target>
 
 	<target name="create jar" depends="clean,javadoc,build">
 		<jar destfile="../CustomStructures.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
-				<attribute name="Main-Class" value="" />
+				<attribute name="Class-Path" value="." />
 			</manifest>
-			<fileset dir="${bin}" includes="lipstone/**" />
-			<fileset dir="." includes="doc/**" />
+			<fileset dir="${bin}" />
+			<fileset dir="." includes="${doc}/**" />
 			<fileset dir="${src}" />
 		</jar>
 	</target>
 
-	<target name="clean" description="Removes all files created by the build process.">
+	<target name="clean" description="Remove all files created by the build process.">
 		<delete dir="${bin}" />
 		<delete dir="${doc}" />
 	</target>
