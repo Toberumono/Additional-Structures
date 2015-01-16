@@ -16,8 +16,8 @@ public class PairedStack<T> {
 	 * Initializes a new, empty <tt>PairedStack</tt>
 	 */
 	public PairedStack() {
-		left = new Stack<T>();
-		right = new Stack<T>();
+		left = new Stack<>();
+		right = new Stack<>();
 	}
 	
 	/**

@@ -23,7 +23,7 @@ public class LinkableHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 	private final HashMap<K, Wrapper> core;
 	
 	public LinkableHashMap() {
-		core = new HashMap<K, Wrapper>();
+		core = new HashMap<>();
 	}
 	
 	/**
@@ -35,7 +35,7 @@ public class LinkableHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 	 * @param maps
 	 *            the other maps to link
 	 */
-	public LinkableHashMap(LinkableHashMap<K, V> map, LinkableHashMap<K, V>... maps) {
+	public LinkableHashMap(LinkableHashMap<K, V> map, @SuppressWarnings("unchecked") LinkableHashMap<K, V>... maps) {
 		core = new HashMap<>(map.core);
 		for (LinkableHashMap<K, V> m : maps) {
 			for (K key : m.core.keySet()) {
@@ -102,7 +102,9 @@ public class LinkableHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V
 	@Override
 	public void putAll(Map<? extends K, ? extends V> m) {
 		if (m instanceof LinkableHashMap) {
-			core.putAll(((LinkableHashMap<K, V>) m).core);
+			@SuppressWarnings("unchecked")
+			LinkableHashMap<K, V> map = (LinkableHashMap<K, V>) m;
+			core.putAll(map.core);
 		}
 	}
 	

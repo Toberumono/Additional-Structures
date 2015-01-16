@@ -21,8 +21,8 @@ public class PairedList<K, V> implements Iterable<K> {
 	 * Constructs a new <tt>PairedList</tt>
 	 */
 	public PairedList() {
-		keys = new ArrayList<K>();
-		values = new ArrayList<V>();
+		keys = new ArrayList<>();
+		values = new ArrayList<>();
 	}
 	
 	/**
@@ -138,7 +138,7 @@ public class PairedList<K, V> implements Iterable<K> {
 	 * @return the removed values as an ArrayList, otherwise an empty list
 	 */
 	public ArrayList<V> removeAll(K key) {
-		ArrayList<V> output = new ArrayList<V>();
+		ArrayList<V> output = new ArrayList<>();
 		for (int i = 0; i < keys.size(); i++)
 			if (keys.get(i).equals(key)) {
 				keys.remove(i);

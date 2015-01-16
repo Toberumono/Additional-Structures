@@ -31,7 +31,7 @@ public class MappedList<T, V extends Comparable<V>> {
 	 */
 	public MappedList(Comparator<T> keyComparator, Comparator<V> valueComparator) {
 		this.valueComparator = valueComparator;
-		this.map = new TreeMap<T, SortedList<V>>(keyComparator);
+		this.map = new TreeMap<>(keyComparator);
 	}
 	
 	/**
@@ -65,7 +65,7 @@ public class MappedList<T, V extends Comparable<V>> {
 	 */
 	public void put(T key, V value) {
 		if (!map.containsKey(key))
-			map.put(key, new SortedList<V>(valueComparator));
+			map.put(key, new SortedList<>(valueComparator));
 		SortedList<V> temp = map.get(key);
 		if (!temp.contains(value)) {
 			temp.add(value);

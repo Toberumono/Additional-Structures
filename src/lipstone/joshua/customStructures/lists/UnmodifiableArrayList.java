@@ -153,7 +153,7 @@ public class UnmodifiableArrayList<E> extends ArrayList<E> implements List<E> {
 	
 	@Override
 	public ArrayList<E> subList(int fromIndex, int toIndex) {
-		return new UnmodifiableArrayList<E>((ArrayList<E>) list.subList(fromIndex, toIndex));
+		return new UnmodifiableArrayList<>((ArrayList<E>) list.subList(fromIndex, toIndex));
 	}
 	
 	@Override

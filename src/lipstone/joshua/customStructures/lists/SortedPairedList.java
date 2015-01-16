@@ -24,8 +24,8 @@ public class SortedPairedList<K extends Comparable<K>, V> implements Iterable<K>
 	 *            the {@link java.util.Comparator Comparator} used to sort the keys.
 	 */
 	public SortedPairedList(Comparator<K> keySorter) {
-		keys = new SortedList<K>(keySorter);
-		values = new ArrayList<V>();
+		keys = new SortedList<>(keySorter);
+		values = new ArrayList<>();
 	}
 	
 	/**
