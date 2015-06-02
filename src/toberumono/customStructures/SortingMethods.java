@@ -1,4 +1,4 @@
-package lipstone.joshua.customStructures;
+package toberumono.customStructures;
 
 import java.util.Comparator;
 

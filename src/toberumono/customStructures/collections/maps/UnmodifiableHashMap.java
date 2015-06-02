@@ -1,4 +1,4 @@
-package lipstone.joshua.customStructures.maps;
+package toberumono.customStructures.collections.maps;
 
 import java.util.Collection;
 import java.util.Collections;

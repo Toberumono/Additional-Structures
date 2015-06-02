@@ -1,4 +1,4 @@
-package lipstone.joshua.customStructures.lists;
+package toberumono.customStructures.collections.lists;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,7 +10,7 @@ import java.util.Comparator;
  * the comparator will be sorted by the order in which they were inserted in the list.
  * 
  * @author Joshua Lipstone
- * @see lipstone.joshua.customStructures.SortingMethods SortingMethods
+ * @see toberumono.customStructures.SortingMethods SortingMethods
  */
 public class SortedList<T extends Comparable<T>> extends ArrayList<T> {
 	private final Comparator<T> comparator;

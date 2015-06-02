@@ -1,9 +1,9 @@
-package lipstone.joshua.customStructures.maps;
+package toberumono.customStructures.collections.maps;
 
 import java.util.Comparator;
 import java.util.TreeMap;
 
-import lipstone.joshua.customStructures.lists.SortedList;
+import toberumono.customStructures.collections.lists.SortedList;
 
 /**
  * This is effectively a TreeMap for keys that map to multiple values. This does prevent duplicate values within each key's
@@ -27,7 +27,7 @@ public class MappedList<T, V extends Comparable<V>> {
 	 *            the comparator to sort the keys with
 	 * @param valueComparator
 	 *            the comparator to sort the values with
-	 * @see lipstone.joshua.customStructures.SortingMethods SortingMethods
+	 * @see toberumono.customStructures.SortingMethods SortingMethods
 	 */
 	public MappedList(Comparator<T> keyComparator, Comparator<V> valueComparator) {
 		this.valueComparator = valueComparator;
@@ -40,7 +40,7 @@ public class MappedList<T, V extends Comparable<V>> {
 	 * 
 	 * @param keyComparator
 	 *            the comparator to sort the keys with
-	 * @see lipstone.joshua.customStructures.SortingMethods SortingMethods
+	 * @see toberumono.customStructures.SortingMethods SortingMethods
 	 */
 	public MappedList(Comparator<T> keyComparator) {
 		this(keyComparator, null);

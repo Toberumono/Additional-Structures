@@ -1,4 +1,4 @@
-package lipstone.joshua.customStructures.tuples;
+package toberumono.customStructures.tuples;
 
 /**
  * An pair of objects - simplifies passing of directly related objects

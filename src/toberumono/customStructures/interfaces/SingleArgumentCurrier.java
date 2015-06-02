@@ -1,4 +1,4 @@
-package lipstone.joshua.customStructures.interfaces;
+package toberumono.customStructures.interfaces;
 
 /**
  * A simple functional interface for currying functions such that they get one additional argument of type P

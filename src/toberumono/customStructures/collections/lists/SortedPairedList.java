@@ -1,4 +1,4 @@
-package lipstone.joshua.customStructures.lists;
+package toberumono.customStructures.collections.lists;
 
 import java.util.ArrayList;
 import java.util.Comparator;

@@ -1,4 +1,4 @@
-package lipstone.joshua.customStructures.stacks;
+package toberumono.customStructures.stacks;
 
 import java.util.Stack;
 
