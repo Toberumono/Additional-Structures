@@ -8,13 +8,22 @@ package toberumono.customStructures.tuples;
  *            the type of the first element
  * @param <Y>
  *            the type of the second element
+ * @see ImmutablePair
  */
 public class Pair<X, Y> {
 	private X x;
 	private Y y;
 	
 	/**
-	 * Constructs a new <tt>Pair</tt> with elements of types X and Y
+	 * Constructs a new {@link Pair} with null elements.
+	 */
+	public Pair() {
+		x = null;
+		y = null;
+	}
+	
+	/**
+	 * Constructs a new {@link Pair} with the given elements.
 	 * 
 	 * @param x
 	 *            the first element
@@ -73,6 +82,6 @@ public class Pair<X, Y> {
 		if (!(o instanceof Pair))
 			return false;
 		Pair<?, ?> p = (Pair<?, ?>) o;
-		return (x == null ? x == p.x : x.equals(p.x)) && (y == null ? y == p.y : y.equals(p.y));
+		return (x == p.x || (x != null && x.equals(p.x))) && (y == p.y || (y != null && y.equals(p.y)));
 	}
 }
