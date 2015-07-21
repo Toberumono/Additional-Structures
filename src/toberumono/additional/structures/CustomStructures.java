@@ -1,7 +1,7 @@
-package toberumono.customStructures;
+package toberumono.additional.structures;
 
-import toberumono.customStructures.tuples.ImmutablePair;
-import toberumono.customStructures.tuples.Pair;
+import toberumono.additional.structures.tuples.ImmutablePair;
+import toberumono.additional.structures.tuples.Pair;
 
 public class CustomStructures {
 	

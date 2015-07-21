@@ -1,4 +1,4 @@
-package toberumono.customStructures.tuples;
+package toberumono.additional.structures.tuples;
 
 /**
  * An pair of objects - simplifies passing of directly related objects

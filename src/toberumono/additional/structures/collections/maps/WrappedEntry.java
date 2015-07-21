@@ -1,4 +1,4 @@
-package toberumono.customStructures.collections.maps;
+package toberumono.additional.structures.collections.maps;
 
 import java.util.Map;
 import java.util.function.Function;

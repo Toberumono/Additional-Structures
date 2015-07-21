@@ -1,4 +1,4 @@
-package toberumono.customStructures.collections.iterators;
+package toberumono.additional.structures.collections.iterators;
 
 import java.util.Iterator;
 import java.util.function.Function;

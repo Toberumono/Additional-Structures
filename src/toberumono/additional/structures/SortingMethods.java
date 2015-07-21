@@ -1,4 +1,4 @@
-package toberumono.customStructures;
+package toberumono.additional.structures;
 
 import java.util.Comparator;
 

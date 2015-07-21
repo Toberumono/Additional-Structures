@@ -1,4 +1,4 @@
-package toberumono.customStructures.tuples;
+package toberumono.additional.structures.tuples;
 
 /**
  * An immutable pair of objects that can be used either with wholly new parameters or as a wrapper on an existing

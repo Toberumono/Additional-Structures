@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="create jar" name="Create Runnable Jar for project CustomStructures">
+<project default="create jar" name="Create Runnable Jar for project Additional Structures">
 	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
 	<!--ANT 1.8 is required                                        -->
 
 	<property name="src" location="src" />
 	<property name="bin" location="bin" />
 	<property name="doc" value="doc" />
-	<property name="jar" location="../CustomStructures.jar" />
+	<property name="jar" location="../AdditionalStructures.jar" />
 
 	<!--Files that should be excluded from the build go here-->
 	<patternset id="Build Excludes">

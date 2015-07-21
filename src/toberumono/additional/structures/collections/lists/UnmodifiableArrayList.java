@@ -1,4 +1,4 @@
-package toberumono.customStructures.collections.lists;
+package toberumono.additional.structures.collections.lists;
 
 import java.util.ArrayList;
 import java.util.Collection;
