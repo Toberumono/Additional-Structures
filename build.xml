@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="create jar" name="Create Runnable Jar for project Additional Structures" xmlns:if="ant:if" xmlns:unless="ant:unless">
 	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
-	<!--ANT 1.8 is required                                        -->
+	<!--ANT 1.9.4 is required                                      -->
 
 	<property name="src" location="src" />
 	<property name="bin" location="bin" />
