@@ -1,4 +1,4 @@
-package toberumono.additional.structures.stacks;
+package toberumono.structures.stacks;
 
 import java.util.Stack;
 

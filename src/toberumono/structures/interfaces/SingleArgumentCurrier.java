@@ -1,4 +1,4 @@
-package toberumono.additional.structures.interfaces;
+package toberumono.structures.interfaces;
 
 /**
  * A simple functional interface for currying functions such that they get one additional argument of type P

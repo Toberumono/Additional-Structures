@@ -1,4 +1,4 @@
-package toberumono.additional.structures.collections.lists;
+package toberumono.structures.collections.lists;
 
 import java.util.ArrayList;
 import java.util.Iterator;
