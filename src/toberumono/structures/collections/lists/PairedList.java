@@ -7,7 +7,7 @@ import java.util.Iterator;
  * A pair of ArrayLists that are kept in sync. This does allow for multiple values per key and duplicate values, even under
  * the same key.
  * 
- * @author Joshua Lipstone
+ * @author Toberumono
  * @param <K>
  *            the key type
  * @param <V>
@@ -154,6 +154,11 @@ public class PairedList<K, V> implements Iterable<K> {
 		return keys.size();
 	}
 	
+	/**
+	 * @param key
+	 *            the key to test for
+	 * @return {@code true} if this {@link PairedList} contains <tt>key</tt>
+	 */
 	public boolean containsKey(K key) {
 		return keys.indexOf(key) > -1;
 	}

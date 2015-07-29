@@ -4,17 +4,17 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Wraps an {@link Map.Entry} of type <tt>T, S</tt> to produce a {@link Map.Entry} of type <tt>K, V</tt>.
+ * Wraps an {@link java.util.Map.Entry} of type <tt>T, S</tt> to produce a {@link java.util.Map.Entry} of type <tt>K, V</tt>.
  * 
- * @author Joshua Lipstone
+ * @author Toberumono
  * @param <K>
- *            the key type of the wrapping {@link Map.Entry}
+ *            the key type of the wrapping {@link java.util.Map.Entry}
  * @param <V>
- *            the value type of the wrapping {@link Map.Entry}
+ *            the value type of the wrapping {@link java.util.Map.Entry}
  * @param <T>
- *            the key type of the wrapped {@link Map.Entry}
+ *            the key type of the wrapped {@link java.util.Map.Entry}
  * @param <S>
- *            the value type of the wrapped {@link Map.Entry}
+ *            the value type of the wrapped {@link java.util.Map.Entry}
  */
 public class WrappedEntry<K, V, T, S> implements Map.Entry<K, V> {
 	private final Map.Entry<T, S> back;
@@ -23,10 +23,10 @@ public class WrappedEntry<K, V, T, S> implements Map.Entry<K, V> {
 	private final Function<V, S> valueUnwrapper;
 	
 	/**
-	 * Creates a new {@link WrappedEntry} from an existing {@link Map.Entry} of type <tt>T, S</tt>
+	 * Creates a new {@link WrappedEntry} from an existing {@link java.util.Map.Entry} of type <tt>T, S</tt>
 	 * 
 	 * @param back
-	 *            the {@link Map.Entry} to be wrapped
+	 *            the {@link java.util.Map.Entry} to be wrapped
 	 * @param keyConverter
 	 *            a {@link Function} that converts a value of type <tt>T</tt> into a equivalent value of type <tt>K</tt>
 	 * @param valueConverter
@@ -37,10 +37,10 @@ public class WrappedEntry<K, V, T, S> implements Map.Entry<K, V> {
 	}
 	
 	/**
-	 * Creates a new {@link WrappedEntry} from an existing {@link Map.Entry} of type <tt>T, S</tt>
+	 * Creates a new {@link WrappedEntry} from an existing {@link java.util.Map.Entry} of type <tt>T, S</tt>
 	 * 
 	 * @param back
-	 *            the {@link Map.Entry} to be wrapped
+	 *            the {@link java.util.Map.Entry} to be wrapped
 	 * @param keyConverter
 	 *            a {@link Function} that converts a value of type <tt>T</tt> into a equivalent value of type <tt>K</tt>
 	 * @param valueConverter

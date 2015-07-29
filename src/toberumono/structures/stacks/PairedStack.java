@@ -5,7 +5,7 @@ import java.util.Stack;
 /**
  * Links two stacks such that when an element is popped from one stack, it is pushed onto the other.
  * 
- * @author Joshua Lipstone
+ * @author Toberumono
  * @param <T>
  *            the type of element contained in this <tt>PairedStack</tt>
  */

@@ -6,7 +6,7 @@ import java.util.function.Function;
 /**
  * Wraps an {@link Iterator} of type <tt>V</tt> to produce an {@link Iterator} of type <tt>T</tt>.
  * 
- * @author Joshua Lipstone
+ * @author Toberumono
  * @param <T>
  *            the type of the wrapping {@link Iterator}
  * @param <V>

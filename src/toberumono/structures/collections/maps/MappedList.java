@@ -9,7 +9,7 @@ import toberumono.structures.collections.lists.SortedList;
  * This is effectively a TreeMap for keys that map to multiple values. This does prevent duplicate values within each key's
  * list.
  * 
- * @author Joshua Lipstone
+ * @author Toberumono
  * @param <T>
  *            the key type
  * @param <V>

@@ -3,7 +3,7 @@ package toberumono.structures.tuples;
 /**
  * An pair of objects - simplifies passing of directly related objects
  * 
- * @author Joshua Lipstone
+ * @author Toberumono
  * @param <X>
  *            the type of the first element
  * @param <Y>

@@ -9,7 +9,9 @@ import java.util.Comparator;
  * accordingly. When you add an object to the list, it is inserted in the correct place. Objects that are equal according to
  * the comparator will be sorted by the order in which they were inserted in the list.
  * 
- * @author Joshua Lipstone
+ * @author Toberumono
+ * @param <T>
+ *            the type stored in the {@link SortedList}
  * @see toberumono.structures.SortingMethods SortingMethods
  */
 public class SortedList<T extends Comparable<T>> extends ArrayList<T> {
@@ -102,7 +104,7 @@ public class SortedList<T extends Comparable<T>> extends ArrayList<T> {
 	}
 	
 	/**
-	 * This method forwards to {@link #add(Object) add(element)} because it would otherwise violate the sorting order.
+	 * This method forwards to {@link #add(Comparable) add(element)} because it would otherwise violate the sorting order.
 	 */
 	@Override
 	public void add(int index, T element) {
@@ -151,6 +153,10 @@ public class SortedList<T extends Comparable<T>> extends ArrayList<T> {
 		sortingEnabled = false;
 	}
 	
+	/**
+	 * Enables the automatic sorting of this list if it was not already enabled and sorts it if the {@link Comparator} is not
+	 * {@code null}.
+	 */
 	public void enableSorting() {
 		sortingEnabled = true;
 		if (comparator != null)

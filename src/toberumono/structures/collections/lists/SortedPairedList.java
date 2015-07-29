@@ -7,7 +7,7 @@ import java.util.Iterator;
 /**
  * A pair of ArrayLists that are kept in sync. This does not allow for multiple values per key.
  * 
- * @author Joshua Lipstone
+ * @author Toberumono
  * @param <K>
  *            the key type
  * @param <V>
@@ -123,7 +123,12 @@ public class SortedPairedList<K extends Comparable<K>, V> implements Iterable<K>
 	public int size() {
 		return keys.size();
 	}
-	
+
+	/**
+	 * @param key
+	 *            the key to test for
+	 * @return {@code true} if this {@link PairedList} contains <tt>key</tt>
+	 */
 	public boolean containsKey(K key) {
 		return keys.indexOf(key) > -1;
 	}

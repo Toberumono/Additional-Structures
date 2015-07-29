@@ -5,7 +5,7 @@ import java.util.Comparator;
 /**
  * Some pre-configured {@link java.util.Comparator Comparators} for common sorting methods
  * 
- * @author Joshua Lipstone
+ * @author Toberumono
  */
 public class SortingMethods {
 	

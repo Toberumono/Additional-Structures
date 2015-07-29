@@ -4,7 +4,7 @@ package toberumono.structures.tuples;
  * An immutable pair of objects that can be used either with wholly new parameters or as a wrapper on an existing
  * {@link Pair}.
  * 
- * @author Joshua Lipstone
+ * @author Toberumono
  * @param <X>
  *            the type of the first element
  * @param <Y>
@@ -14,10 +14,24 @@ package toberumono.structures.tuples;
 public class ImmutablePair<X, Y> extends Pair<X, Y> {
 	private final Pair<X, Y> mutable;
 	
+	/**
+	 * Constructs a new {@link ImmutablePair} with the given elements.
+	 * 
+	 * @param x
+	 *            the first element
+	 * @param y
+	 *            the second element
+	 */
 	public ImmutablePair(X x, Y y) {
 		mutable = new Pair<>(x, y);
 	}
 	
+	/**
+	 * Constructs a new {@link ImmutablePair} that wraps the given {@link Pair}
+	 * 
+	 * @param mutable
+	 *            the {@link Pair} to wrap
+	 */
 	public ImmutablePair(Pair<X, Y> mutable) {
 		this.mutable = mutable;
 	}

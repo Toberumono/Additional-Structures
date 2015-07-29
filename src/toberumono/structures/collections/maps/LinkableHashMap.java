@@ -13,7 +13,7 @@ import java.util.Set;
  * This is a wrapper for {@link java.util.HashMap}. While linkable isn't quite the right word, this is effectively a HashMap
  * that can create submaps in the way that ArrayLists can create sublists.
  * 
- * @author Joshua Lipstone
+ * @author Toberumono
  * @param <K>
  *            key type
  * @param <V>
@@ -22,6 +22,9 @@ import java.util.Set;
 public class LinkableHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
 	private final HashMap<K, Wrapper> core;
 	
+	/**
+	 * Basic constructor. Creates an empty {@link LinkableHashMap}.
+	 */
 	public LinkableHashMap() {
 		core = new HashMap<>();
 	}

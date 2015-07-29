@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  * Most of the code is a clone of the code found in {@link java.util.HashMap}, modified such that it uses equality instead of
  * hash codes.
  * 
- * @author Joshua Lipstone
+ * @author Toberumono
  * @param <K>
  *            The key type for this map
  * @param <V>

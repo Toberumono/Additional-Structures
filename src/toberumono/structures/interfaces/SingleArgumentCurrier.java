@@ -3,7 +3,7 @@ package toberumono.structures.interfaces;
 /**
  * A simple functional interface for currying functions such that they get one additional argument of type P
  * 
- * @author Joshua Lipstone
+ * @author Toberumono
  * @param <P>
  *            the argument type
  * @param <R>
