@@ -38,6 +38,7 @@ public class Triple<X, Y, Z> {
 	public Triple(X x, Y y, Z z) {
 		this.x = x;
 		this.y = y;
+		this.z = z;
 	}
 	
 	/**
