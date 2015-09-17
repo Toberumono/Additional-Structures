@@ -15,7 +15,7 @@ import java.util.Objects;
  *            the extending implementation
  */
 @SuppressWarnings("unchecked")
-public abstract class GenericConsCell<Ty extends GenericConsType, To extends GenericConsCell<Ty, To>> implements Comparable<To>, Cloneable, Iterable<To> {
+public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsCell<Ty, To>> implements Comparable<To>, Cloneable, Iterable<To> {
 	protected Ty carType, cdrType;
 	protected Object car, cdr;
 	protected To previous;
@@ -365,16 +365,16 @@ public abstract class GenericConsCell<Ty extends GenericConsType, To extends Gen
 	/**
 	 * Gets the nth {@link GenericConsCell Cell} after this {@link GenericConsCell Cell} (e.g. {@code getNextCell(1)} is
 	 * equivalent to {@code getNextConsCell()}).<br>
-	 * If <tt>n</tt> is negative, this is equivalent to {@link #getPreviousCell(int)} with <tt>n</tt> being positive.
+	 * If <tt>n</tt> is negative, this is equivalent to {@link #getPreviousConsCell(int)} with <tt>n</tt> being positive.
 	 * 
 	 * @param n
 	 *            the distance between this {@link GenericConsCell Cell} and the desired {@link GenericConsCell Cell}
 	 * @return the nth {@link GenericConsCell Cell} after this {@link GenericConsCell Cell} in the current level of the tree
 	 *         structure or an empty {@link GenericConsCell Cell} if there is no such {@link GenericConsCell Cell}
 	 */
-	public To getNextCell(int n) {
+	public To getNextConsCell(int n) {
 		if (n < 0)
-			return getPreviousCell(-n);
+			return getPreviousConsCell(-n);
 		To cur = (To) this;
 		for (; n > 0 && !cur.isNull(); cur = cur.getNextConsCell(), n--);
 		return cur;
@@ -405,16 +405,16 @@ public abstract class GenericConsCell<Ty extends GenericConsType, To extends Gen
 	/**
 	 * Gets the nth {@link GenericConsCell Cell} before this {@link GenericConsCell Cell} (e.g. {@code getPreviousCell(1)} is
 	 * equivalent to {@code getPreviousConsCell()}).<br>
-	 * If <tt>n</tt> is negative, this is equivalent to {@link #getNextCell(int)} with <tt>n</tt> being positive.
+	 * If <tt>n</tt> is negative, this is equivalent to {@link #getNextConsCell(int)} with <tt>n</tt> being positive.
 	 * 
 	 * @param n
 	 *            the distance between this {@link GenericConsCell Cell} and the desired {@link GenericConsCell Cell}
 	 * @return the nth {@link GenericConsCell Cell} before this {@link GenericConsCell Cell} in the current level of the tree
 	 *         structure or an empty {@link GenericConsCell Cell} if there is no such {@link GenericConsCell Cell}
 	 */
-	public To getPreviousCell(int n) {
+	public To getPreviousConsCell(int n) {
 		if (n < 0)
-			return getNextCell(-n);
+			return getNextConsCell(-n);
 		To cur = (To) this;
 		for (; n > 0 && cur != null; cur = cur.getPreviousConsCell(), n--);
 		return cur;
