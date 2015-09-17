@@ -1,8 +1,10 @@
-package toberumono.structures.sexps;
+package toberumono.structures.sexpressions.generic;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+
+import toberumono.structures.sexpressions.ConsCellConstructor;
 
 /**
  * Generic implementation of a doubly-linked list, using a structure based on cons cells from Lisp.<br>

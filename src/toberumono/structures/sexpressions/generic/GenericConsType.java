@@ -1,4 +1,4 @@
-package toberumono.structures.sexps;
+package toberumono.structures.sexpressions.generic;
 
 import java.lang.reflect.InvocationTargetException;
 

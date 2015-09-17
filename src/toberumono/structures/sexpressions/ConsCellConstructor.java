@@ -1,4 +1,7 @@
-package toberumono.structures.sexps;
+package toberumono.structures.sexpressions;
+
+import toberumono.structures.sexpressions.generic.GenericConsCell;
+import toberumono.structures.sexpressions.generic.GenericConsType;
 
 /**
  * Represents the basic constructor for an implementation of {@link GenericConsCell}.
