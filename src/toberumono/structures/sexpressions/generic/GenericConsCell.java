@@ -246,7 +246,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 */
 	public To setCdr(Object cdr, Ty cdrType) {
 		if (this.cdrType == cellType)
-			((To) cdr).previous = null;
+			((To) this.cdr).previous = null;
 		this.cdr = cdr;
 		this.cdrType = cdrType == null ? emptyType : cdrType;
 		return (To) this;
@@ -270,10 +270,10 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 			next.setPrevious(null);
 			car = next.car;
 			carType = next.carType;
-			if (next.cdrType == next.cellType)
-				((To) next.cdr).setPrevious((To) this);
 			cdr = next.cdr;
 			cdrType = next.cdrType;
+			if (next.cdrType == next.cellType)
+				((To) next.cdr).setPrevious((To) this);
 			return (To) this;
 		}
 		next.setPrevious((To) this);
@@ -310,10 +310,10 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 			next.setPrevious(null);
 			car = next.car;
 			carType = next.carType;
-			if (next.cdrType == next.cellType)
-				((To) next.cdr).setPrevious((To) this);
 			cdr = next.cdr;
 			cdrType = next.cdrType;
+			if (next.cdrType == next.cellType)
+				((To) next.cdr).setPrevious((To) this);
 			return (To) this;
 		}
 		next.setPrevious((To) this);
