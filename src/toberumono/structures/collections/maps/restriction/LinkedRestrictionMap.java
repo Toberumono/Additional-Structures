@@ -82,7 +82,9 @@ public class LinkedRestrictionMap<K, V> implements RestrictionMap<K, V> {
 		if (!restricted.containsKey(key))
 			throw new UnsupportedOperationException("Cannot apply a restriction using a key (" + key.toString() + ") that is not in the map.");
 		active = key;
-		backing = restricted.get(active);
+		RestrictionKernel newRK = restricted.get(active);
+		if (newRK != null)
+			backing = newRK;
 	}
 	
 	@Override
