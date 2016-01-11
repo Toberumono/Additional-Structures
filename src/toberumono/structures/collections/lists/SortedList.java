@@ -4,17 +4,22 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 
+import toberumono.structures.SortingMethods;
+
 /**
- * This class implements a sorted list. It is constructed with a comparator that can compare two objects and sorts objects
- * accordingly. When you add an object to the list, it is inserted in the correct place. Objects that are equal according to
- * the comparator will be sorted by the order in which they were inserted in the list.
+ * This class implements a sorted list. It is constructed with a {@link Comparator} for the type of elements being stored
+ * ({@code T}) and sorts the elements accordingly. When you add an element to the list, it is inserted in the correct place.
+ * Elements that are equal according to the {@link Comparator} will be sorted by the order in which they were inserted in the
+ * {@link SortedList}.<br>
+ * Although this implementation technically supports {@code null} elements, many {@link Comparator Comparators} do not, so
+ * adding {@code null} elements is <i>not</i> recommended.
  * 
  * @author Toberumono
  * @param <T>
  *            the type stored in the {@link SortedList}
- * @see toberumono.structures.SortingMethods SortingMethods
+ * @see SortingMethods
  */
-public class SortedList<T extends Comparable<T>> extends ArrayList<T> {
+public class SortedList<T> extends ArrayList<T> {
 	private final Comparator<T> comparator;
 	private boolean sortingEnabled = true;
 	
@@ -104,7 +109,7 @@ public class SortedList<T extends Comparable<T>> extends ArrayList<T> {
 	}
 	
 	/**
-	 * This method forwards to {@link #add(Comparable) add(element)} because it would otherwise violate the sorting order.
+	 * This method forwards to {@link #add(Object) add(element)} because it would otherwise violate the sorting order.
 	 */
 	@Override
 	public void add(int index, T element) {
@@ -163,22 +168,25 @@ public class SortedList<T extends Comparable<T>> extends ArrayList<T> {
 			quickSort(0, size() - 1);
 	}
 	
-	@Override
-	public int indexOf(Object element) {
-		return super.indexOf(element);
-	}
-	
 	/**
 	 * @param element
-	 *            the element to get the index of
+	 *            the element of which to get the index
 	 * @return the index of the first occurrence of the specified element in this list, or -1 if this list does not contain
 	 *         the element.
 	 */
-	public int indexOf(T element) {
-		int item = getPos(element, 0, size());
-		if (item == size())
-			return -1;
-		return comparator.compare(get(item), element) == 0 ? item : -1;
+	@Override
+	public int indexOf(Object element) {
+		try {
+			@SuppressWarnings("unchecked")
+			T e = (T) element;
+			int item = getPos(e, 0, size());
+			if (item == size())
+				return -1;
+			return comparator.compare(get(item), e) == 0 ? item : -1;
+		}
+		catch (ClassCastException e) {
+			return super.indexOf(element);
+		}
 	}
 	
 	@Override
@@ -210,9 +218,9 @@ public class SortedList<T extends Comparable<T>> extends ArrayList<T> {
 	 * Used when the number of items to be sorted (right - left) is less than 250.
 	 * 
 	 * @param left
-	 *            the left most bound to sort
+	 *            the leftmost bound to sort
 	 * @param right
-	 *            the right most bound (exclusive) to sort
+	 *            the rightmost bound (exclusive) to sort
 	 */
 	private void selectionSort(int left, int right) {
 		for (int i = left; i < right; i++)
@@ -225,13 +233,13 @@ public class SortedList<T extends Comparable<T>> extends ArrayList<T> {
 	}
 	
 	/**
-	 * Used when the number of items to be sorted (right - left) is at least 250. If (right - left) is less than 250, it
-	 * forwards to {@link #selectionSort(int, int) selectionSort(int left, int right)}
+	 * Used when the number of items to be sorted ({@code right - left}) is at least 250. If the number of items to be sorted
+	 * is less than 250, it forwards to {@link #selectionSort(int, int) selectionSort(left, right)}
 	 * 
 	 * @param left
-	 *            the left most bound to sort
+	 *            the leftmost bound to sort
 	 * @param right
-	 *            the right most bound (exclusive) to sort
+	 *            the rightmost bound (exclusive) to sort
 	 */
 	private void quickSort(int left, int right) {
 		if (left < right) { //If the section of this list has at least 2 items
