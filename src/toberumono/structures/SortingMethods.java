@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.Comparator;
 
 import toberumono.structures.collections.lists.SortedList;
+import toberumono.structures.versioning.VersionNumber;
 
 /**
  * A static class containing some common {@link Comparator Comparators} for sorting methods.
@@ -94,12 +95,26 @@ public class SortingMethods {
 	 */
 	public static final Comparator<Path> PATH_MODIFIED_TIME_DESCENDING = (o1, o2) -> {
 		try {
-			return Files.getLastModifiedTime(o2).compareTo(Files.getLastModifiedTime(o1)); //Sort the Paths by last modified.  The first element will always be the oldest this way.
+			return Files.getLastModifiedTime(o2).compareTo(Files.getLastModifiedTime(o1)); //Sort the Paths by last modified.  The last element will always be the oldest this way.
 		}
 		catch (IOException e) {
 			return 0;
 		}
 	};
+	
+	/**
+	 * A {@link Comparator} that sorts {@link VersionNumber VersionNumbers} in ascending order.
+	 * 
+	 * @see #VERSIONNUMBER_DESCENDING
+	 */
+	public static final Comparator<VersionNumber> VERSIONNUMBER_ASCENDING = (o1, o2) -> o1.compareTo(o2);
+	
+	/**
+	 * A {@link Comparator} that sorts {@link VersionNumber VersionNumbers} in descending order.
+	 * 
+	 * @see #VERSIONNUMBER_ASCENDING
+	 */
+	public static final Comparator<VersionNumber> VERSIONNUMBER_DESCENDING = (o1, o2) -> o2.compareTo(o1); //o2.compareTo(o1) is the reverse of o1.compareTo(o2), thereby making this descending.
 	
 	private SortingMethods() { /*This is a static class*/ }
 }
