@@ -101,6 +101,18 @@ public class Triple<X, Y, Z> {
 	}
 	
 	@Override
+	public int hashCode() {
+		int out = 17;
+		if (x != null)
+			out = 31 * out + x.hashCode();
+		if (y != null)
+			out = 31 * out + y.hashCode();
+		if (z != null)
+			out = 31 * out + z.hashCode();
+		return out;
+	}
+	
+	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof Triple))
 			return false;

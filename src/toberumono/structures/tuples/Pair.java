@@ -78,6 +78,16 @@ public class Pair<X, Y> {
 	}
 	
 	@Override
+	public int hashCode() {
+		int out = 17;
+		if (x != null)
+			out = 31 * out + x.hashCode();
+		if (y != null)
+			out = 31 * out + y.hashCode();
+		return out;
+	}
+	
+	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof Pair))
 			return false;
