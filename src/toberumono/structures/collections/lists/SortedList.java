@@ -19,8 +19,8 @@ import toberumono.structures.SortingMethods;
  *            the type stored in the {@link SortedList}
  * @see SortingMethods
  */
-public class SortedList<T> extends ArrayList<T> {
-	private final Comparator<T> comparator;
+public class SortedList<T> extends ArrayList<T> implements Cloneable {
+	private final Comparator<? super T> comparator;
 	private boolean sortingEnabled = true;
 	
 	/**
@@ -32,7 +32,7 @@ public class SortedList<T> extends ArrayList<T> {
 	 * @param comparator
 	 *            the comparator to sort this list with
 	 */
-	public SortedList(int initialCapacity, Comparator<T> comparator) {
+	public SortedList(int initialCapacity, Comparator<? super T> comparator) {
 		super(initialCapacity);
 		this.comparator = comparator;
 	}
@@ -45,7 +45,7 @@ public class SortedList<T> extends ArrayList<T> {
 	 * @param comparator
 	 *            the comparator to sort this list with
 	 */
-	public SortedList(Comparator<T> comparator) {
+	public SortedList(Comparator<? super T> comparator) {
 		this.comparator = comparator;
 	}
 	
@@ -58,7 +58,7 @@ public class SortedList<T> extends ArrayList<T> {
 	 * @param comparator
 	 *            the comparator to sort this list with
 	 */
-	public SortedList(SortedList<T> list, Comparator<T> comparator) {
+	public SortedList(SortedList<T> list, Comparator<? super T> comparator) {
 		super(list);
 		this.comparator = comparator;
 	}
@@ -146,7 +146,7 @@ public class SortedList<T> extends ArrayList<T> {
 	/**
 	 * @return the {@link java.util.Comparator Comparator} used to sort the elements in this list.
 	 */
-	public Comparator<T> getComparator() {
+	public Comparator<? super T> getComparator() {
 		return comparator;
 	}
 	
@@ -182,7 +182,7 @@ public class SortedList<T> extends ArrayList<T> {
 			int item = getPos(e, 0, size());
 			if (item == size())
 				return -1;
-			return comparator.compare(get(item), e) == 0 ? item : -1;
+			return get(item).equals(element) ? item : -1;
 		}
 		catch (ClassCastException e) {
 			return super.indexOf(element);
