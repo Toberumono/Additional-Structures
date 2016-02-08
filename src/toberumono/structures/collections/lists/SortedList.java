@@ -58,7 +58,7 @@ public class SortedList<T> extends ArrayList<T> implements Cloneable {
 	 * @param comparator
 	 *            the comparator to sort this list with
 	 */
-	public SortedList(SortedList<T> list, Comparator<? super T> comparator) {
+	public SortedList(Collection<? extends T> list, Comparator<? super T> comparator) {
 		super(list);
 		this.comparator = comparator;
 	}
