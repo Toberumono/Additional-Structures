@@ -50,24 +50,24 @@ public class SortedList<T> extends ArrayList<T> implements Cloneable {
 	}
 	
 	/**
-	 * Constructs a new list with the items in <tt>list</tt> but sorted with a new comparator.<br>
+	 * Constructs a new {@link SortedList} with the items in {@code c} that is sorted with the given {@link Comparator}.<br>
 	 * This sorts in descending order. That is, the items with the lower value appear at the end of the list.
 	 * 
-	 * @param list
-	 *            the old list
+	 * @param c
+	 *            the {@link Collection} holding the items to initialize the {@link SortedList} with
 	 * @param comparator
-	 *            the comparator to sort this list with
+	 *            the {@link Comparator} to sort the {@link SortedList} with
 	 */
-	public SortedList(Collection<? extends T> list, Comparator<? super T> comparator) {
-		super(list);
+	public SortedList(Collection<? extends T> c, Comparator<? super T> comparator) {
 		this.comparator = comparator;
+		this.addAll(c);
 	}
 	
 	/**
-	 * Constructs a new SortedList that is a duplicate of the specified list.
+	 * Constructs a new {@link SortedList} that is a duplicate of the given {@link SortedList}.
 	 * 
 	 * @param list
-	 *            the list to duplicate
+	 *            the {@link SortedList} to duplicate
 	 */
 	public SortedList(SortedList<T> list) {
 		this.comparator = list.comparator;
