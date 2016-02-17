@@ -1,5 +1,7 @@
 package toberumono.structures.versioning;
 
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 /**
@@ -8,11 +10,12 @@ import java.util.regex.Pattern;
  * 
  * @author Toberumono
  */
-public class VersionNumber implements Comparable<VersionNumber> {
+public class VersionNumber implements Comparable<VersionNumber>, Serializable {
 	private static final Pattern versionSplitter = Pattern.compile(".", Pattern.LITERAL);
-	private final Long[] version;
+	private final long[] version;
 	private final String[] prerelease, metadata;
 	private final String strValue;
+	private int hash;
 	
 	/**
 	 * Constructs a new {@link VersionNumber} from a {@link String} using loose parsing.
@@ -85,8 +88,8 @@ public class VersionNumber implements Comparable<VersionNumber> {
 		return version;
 	}
 	
-	private static Long[] processSemanticVersion(String input) {
-		Long[] version = {0l, 0l, 0l};
+	private static long[] processSemanticVersion(String input) {
+		long[] version = {0l, 0l, 0l};
 		String[] vn = versionSplitter.split(input);
 		if (vn.length != 3)
 			throw new InvalidVersionFormatException("The first section of the version string must be of the form, major.minor.patch, where all three values are non-negative integers.");
@@ -99,7 +102,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
 	public int compareTo(VersionNumber o) {
 		int comp = 0;
 		for (int i = 0; i < version.length; i++) {
-			comp = version[i].compareTo(o.version[i]);
+			comp = Long.compare(version[i], o.version[i]);
 			if (comp != 0)
 				return comp;
 		}
@@ -139,7 +142,7 @@ public class VersionNumber implements Comparable<VersionNumber> {
 		if (version.length != o.version.length)
 			return false;
 		for (int i = 0; i < version.length; i++)
-			if (!version[i].equals(o.version[i]))
+			if (version[i] != o.version[i])
 				return false;
 		if (prerelease.length != o.prerelease.length)
 			return false;
@@ -161,6 +164,12 @@ public class VersionNumber implements Comparable<VersionNumber> {
 	
 	@Override
 	public int hashCode() {
-		return strValue.hashCode();
+		if (hash == 0) {
+			hash = 17;
+			hash = hash * 31 + Arrays.hashCode(version);
+			hash = hash * 31 + Arrays.hashCode(prerelease);
+			hash = hash * 31 + Arrays.hashCode(metadata);
+		}
+		return hash;
 	}
 }
