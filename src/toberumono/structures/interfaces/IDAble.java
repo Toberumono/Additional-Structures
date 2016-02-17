@@ -8,7 +8,7 @@ package toberumono.structures.interfaces;
  *            the type of the {@code ID}
  */
 @FunctionalInterface
-public interface IDable<T> {
+public interface IDAble<T> {
 	
 	/**
 	 * @return the {@code ID} of the object
