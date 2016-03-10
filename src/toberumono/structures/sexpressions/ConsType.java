@@ -10,7 +10,7 @@ import toberumono.structures.sexpressions.generic.ConsCellType;
 public class ConsType extends ConsCellType {
 	
 	/**
-	 * A pre-created type that <i>must</i> be used to denote empty values (e.g. the end of a list)
+	 * A pre-created type that can be used to denote empty values (e.g. the end of a list)
 	 */
 	public static final ConsType EMPTY = new ConsType("Empty") {
 		@Override
