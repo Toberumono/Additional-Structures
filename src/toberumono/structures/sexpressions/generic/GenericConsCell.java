@@ -410,8 +410,8 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	}
 	
 	/**
-	 * @return the first {@link GenericConsCell Cell} in its s-expression. If this {@link GenericConsCell Cell} is the first
-	 *         one, it returns itself.
+	 * @return the first {@link GenericConsCell} in its s-expression. If this {@link GenericConsCell} is the first one, it
+	 *         returns itself.
 	 * @see #getPreviousConsCell()
 	 */
 	public To getFirstConsCell() {
@@ -422,21 +422,29 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	}
 	
 	/**
-	 * Returns a shallow copy of this {@link GenericConsCell Cell} with only the car and carType.<br>
-	 * This effectively creates a {@link GenericConsCell Cell} with a pointer to the same car value of this <tt>Cell</tt> but
-	 * separate from the list.
+	 * Returns a shallow copy of this {@link GenericConsCell} with only the car and carType.<br>
+	 * This effectively creates a {@link GenericConsCell} with a pointer to the same car value of this
+	 * {@link GenericConsCell} but separate from the list.
 	 * 
-	 * @return a shallow copy of this {@link GenericConsCell Cell} that is separate from the list
+	 * @return a shallow copy of the {@link GenericConsCell} that is separate from the list
 	 */
 	public To singular() {
-		return constructor.construct(car, carType, null, emptyType);
+		try {
+			To clone = (To) super.clone();
+			clone.previous = null;
+			clone.cdr = null;
+			clone.cdrType = emptyType;
+			return clone;
+		}
+		catch (CloneNotSupportedException e) {/* This won't occur */}
+		return null;
 	}
 	
 	/**
-	 * Replaces the car value of this {@link GenericConsCell Cell} with that of the given cell.
+	 * Replaces the car value of this {@link GenericConsCell} with that of the given cell.
 	 * 
 	 * @param cell
-	 *            the cell whose car value is to be written to this {@link GenericConsCell Cell}
+	 *            the cell whose car value is to be written to this {@link GenericConsCell}
 	 */
 	public void replaceCar(To cell) {
 		car = cell.car;
@@ -446,37 +454,49 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	@Override
 	public int compareTo(To o) {
 		int result = carType.compareValues(car, o.car);
-		if (result != 0)
-			return result;
-		return cdrType.compareValues(cdr, o.cdr);
+		if (result == 0)
+			result = cdrType.compareValues(cdr, o.cdr);
+		return result;
 	}
 	
 	/**
-	 * Creates a clone of this {@link GenericConsCell GenericCell's} s-expression, where non-cell values are not cloned.
+	 * Creates a clone of this {@link GenericConsCell GenericConsCell's} s-expression, where non-cell values are not cloned.
 	 * 
-	 * @return a clone of this {@link GenericConsCell Cell}
+	 * @return a clone of this {@link GenericConsCell}
 	 */
 	@Override
 	public To clone() {
-		return clone(null);
+		try {
+			To clone = (To) super.clone();
+			if (clone.car instanceof GenericConsCell)
+				clone.car = ((GenericConsCell<?, ?>) clone.car).clone();
+			if (clone.cdr instanceof GenericConsCell) {
+				clone.cdr = ((To) clone.cdr).clone();
+				((To) clone.cdr).previous = clone;
+			}
+			return clone;
+		}
+		catch (CloneNotSupportedException e) {/* This won't occur */}
+		return null;
 	}
 	
 	/**
-	 * Creates a clone of this {@link GenericConsCell GenericCell's} s-expression, where non-cell values are not cloned.
+	 * Creates a clone of this {@link GenericConsCell GenericConsCell's} s-expression, where non-cell values are not cloned
+	 * and sets the clone's previous {@link GenericConsCell} to {@code previous}.
 	 * 
 	 * @param previous
-	 *            the {@link GenericConsCell Cell} that should be set as the cloned <tt>Cell</tt>'s previous value
-	 * @return a clone of this {@link GenericConsCell Cell}
+	 *            the clone's previous {@link GenericConsCell}
+	 * @return a clone of this {@link GenericConsCell}
 	 */
-	protected To clone(To previous) {
-		To clone = constructor.construct(car instanceof GenericConsCell ? ((To) car).clone((To) this) : car, carType, cdr instanceof GenericConsCell ? ((To) cdr).clone((To) this) : cdr, cdrType);
+	public To clone(To previous) {
+		To clone = (To) clone();
 		clone.previous = previous;
 		return clone;
 	}
 	
 	/**
-	 * @return the the number of {@link GenericConsCell AbstractCells} in the level of the s-expression that this
-	 *         {@link GenericConsCell Cell} is on, starting from this {@link GenericConsCell Cell}.
+	 * @return the the number of {@link GenericConsCell GenericConsCells} in the level of the s-expression that this
+	 *         {@link GenericConsCell} is on, starting from this {@link GenericConsCell}.
 	 */
 	public int length() {
 		if (isNull())
@@ -500,10 +520,12 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 			previous.cdrType = cdrType;
 		}
 		To next = getNextConsCell();
-		next.previous = previous;
-		previous = null;
-		cdr = null;
-		cdrType = cellType;
+		if (next != null) {
+			next.previous = previous;
+			previous = null;
+			cdr = null;
+			cdrType = emptyType;
+		}
 		return next;
 	}
 	
