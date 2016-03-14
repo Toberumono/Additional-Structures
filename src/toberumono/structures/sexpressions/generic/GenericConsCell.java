@@ -182,7 +182,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 * @return {@code true} if this {@link GenericConsCell} is a null (or empty) {@link GenericConsCell}
 	 */
 	public boolean isNull() {
-		return carType.equals(emptyType) && cdrType.equals(emptyType);
+		return car == null && cdr == null;
 	}
 	
 	/**
@@ -259,13 +259,13 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 			carType = next.carType;
 			cdr = next.cdr;
 			cdrType = next.cdrType;
-			if (next.cdrType == next.cellType)
+			if (next.cdr instanceof GenericConsCell)
 				((To) next.cdr).setPrevious((To) this);
 			return (To) this;
 		}
 		next.setPrevious((To) this);
-		if (cdrType == emptyType) {
-			//If this was a terminal cell, just set the cdr to point to next
+		if (cdr == null) {
+			//If this was a terminal cell, just set the cdr to pointer to next
 			cdr = next;
 			cdrType = next.cellType;
 			return next;
@@ -304,7 +304,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 			return (To) this;
 		}
 		next.setPrevious((To) this);
-		if (cdrType == emptyType) {
+		if (cdr == null) {
 			//If this was a terminal cell, just set the cdr to point to next
 			cdr = next;
 			cdrType = next.cellType;
@@ -365,7 +365,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 		if (n < 0)
 			return getPreviousConsCell(-n);
 		To cur = (To) this;
-		for (; n > 0 && !cur.isNull(); cur = cur.getNextConsCell(), n--);
+		for (; n > 0 && cur != null; cur = cur.getNextConsCell(), n--);
 		return cur;
 	}
 	
@@ -376,7 +376,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 */
 	public To getLastConsCell() {
 		To current = (To) this;
-		while (current.cdrType == cellType)
+		while (current.cdr instanceof GenericConsCell)
 			current = (To) current.cdr;
 		return current;
 	}
@@ -503,7 +503,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 			return 0;
 		GenericConsCell<Ty, To> cell = this;
 		int length = 1;
-		while (!(cell = cell.getNextConsCell()).isNull())
+		while ((cell = cell.getNextConsCell()) != null)
 			length++;
 		return length;
 	}
