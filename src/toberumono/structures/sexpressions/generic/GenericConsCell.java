@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import toberumono.structures.sexpressions.ConsCellConstructor;
-
 /**
  * Generic implementation of a doubly-linked list, using a structure based on cons cells from Lisp.<br>
  * Each entry in the list contains two pointers and two types to allow for easier type checking.
@@ -21,30 +19,27 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	protected Ty carType, cdrType;
 	protected Object car, cdr;
 	protected To previous;
-	protected final ConsCellConstructor<Ty, To> constructor;
 	protected final Ty cellType, emptyType;
 	
 	/**
-	 * Constructs a {@link GenericConsCell Cell} based on the given source.
+	 * Constructs a {@link GenericConsCell} based on the given source.
 	 * 
 	 * @param source
 	 *            the source of the car/cdr values
 	 * @param previous
-	 *            the new {@link GenericConsCell GenericCell's} previous cell
-	 * @param constructor
-	 *            the constructor to use
+	 *            the new {@link GenericConsCell GenericConsCell's} previous cell
 	 * @param cellType
 	 *            the type that indicates a cell
 	 * @param emptyType
 	 *            the type that indicates an empty car/cdr field.
 	 */
-	public GenericConsCell(To source, To previous, ConsCellConstructor<Ty, To> constructor, Ty cellType, Ty emptyType) {
-		this(source.car, source.carType, source.cdr, source.cdrType, constructor, cellType, emptyType);
+	public GenericConsCell(To source, To previous, Ty cellType, Ty emptyType) {
+		this(source.car, source.carType, source.cdr, source.cdrType, cellType, emptyType);
 		this.previous = previous;
 	}
 	
 	/**
-	 * Constructs a {@link GenericConsCell Cell} with the given car and cdr values.
+	 * Constructs a {@link GenericConsCell} with the given car and cdr values.
 	 * 
 	 * @param car
 	 *            the car value
@@ -54,63 +49,50 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 *            the cdr value
 	 * @param cdrType
 	 *            the cdr type
-	 * @param constructor
-	 *            the constructor to use
 	 * @param cellType
 	 *            the type that indicates a cell
 	 * @param emptyType
 	 *            the type that indicates an empty car/cdr field.
 	 */
-	public GenericConsCell(Object car, Ty carType, Object cdr, Ty cdrType, ConsCellConstructor<Ty, To> constructor, Ty cellType, Ty emptyType) {
-		this.carType = carType == null ? emptyType : carType;
-		this.car = car;
-		if (car instanceof GenericConsCell)
-			((To) car).previous = null;
-		this.cdrType = cdrType == null ? emptyType : cdrType;
-		this.cdr = cdr;
-		if (cdr instanceof GenericConsCell)
-			((To) cdr).previous = (To) this;
-		previous = null;
-		this.constructor = constructor;
+	public GenericConsCell(Object car, Ty carType, Object cdr, Ty cdrType, Ty cellType, Ty emptyType) {
 		this.cellType = cellType;
 		this.emptyType = emptyType;
+		setCar(car, carType);
+		setCdr(cdr, cdrType);
+		previous = null;
 	}
 	
 	/**
-	 * Constructs a {@link GenericConsCell Cell} with the given car value and an empty cdr value.
+	 * Constructs a {@link GenericConsCell} with the given car value and an empty cdr value.
 	 * 
 	 * @param car
 	 *            the car value
 	 * @param carType
 	 *            the car type
-	 * @param constructor
-	 *            the constructor to use
 	 * @param cellType
 	 *            the type that indicates a cell
 	 * @param emptyType
 	 *            the type that indicates an empty car/cdr field.
 	 */
-	public GenericConsCell(Object car, Ty carType, ConsCellConstructor<Ty, To> constructor, Ty cellType, Ty emptyType) {
-		this(car, carType, null, emptyType, constructor, cellType, emptyType);
+	public GenericConsCell(Object car, Ty carType, Ty cellType, Ty emptyType) {
+		this(car, carType, null, emptyType, cellType, emptyType);
 	}
 	
 	/**
-	 * Creates an empty {@link GenericConsCell Cell}
+	 * Creates an empty {@link GenericConsCell}
 	 * 
-	 * @param constructor
-	 *            the constructor for the <tt>Cell</tt> type that extends this one
 	 * @param cellType
-	 *            the <tt>GenericType</tt> that represents <tt>Cell</tt> type that extends this one
+	 *            the {@link GenericConsType Type} of the {@link GenericConsCell} type that extends this one
 	 * @param emptyType
-	 *            the <tt>GenericType</tt> that represents an empty (or null) value in the <tt>Cell</tt> type that extends
-	 *            this one
+	 *            the {@link GenericConsType Type} that represents an empty (or {@code null}) value in the
+	 *            {@link GenericConsCell} type that extends this one
 	 */
-	public GenericConsCell(ConsCellConstructor<Ty, To> constructor, Ty cellType, Ty emptyType) {
-		this(null, emptyType, constructor, cellType, emptyType);
+	public GenericConsCell(Ty cellType, Ty emptyType) {
+		this(null, emptyType, cellType, emptyType);
 	}
 	
 	/**
-	 * @return the car value of this {@link GenericConsCell Cell}
+	 * @return the car value of this {@link GenericConsCell}
 	 * @see #getCarType()
 	 */
 	public Object getCar() {
@@ -118,7 +100,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	}
 	
 	/**
-	 * @return the {@link GenericConsType GenericType} of the car value of this {@link GenericConsCell Cell}
+	 * @return the {@link GenericConsType} of the car value of this {@link GenericConsCell}
 	 * @see #getCar()
 	 */
 	public Ty getCarType() {
@@ -126,7 +108,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	}
 	
 	/**
-	 * @return the cdr value of this {@link GenericConsCell Cell}
+	 * @return the cdr value of this {@link GenericConsCell}
 	 * @see #getCdrType()
 	 */
 	public Object getCdr() {
@@ -134,7 +116,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	}
 	
 	/**
-	 * @return the {@link GenericConsType GenericType} of the cdr value of this {@link GenericConsCell Cell}
+	 * @return the {@link GenericConsType} of the cdr value of this {@link GenericConsCell}
 	 * @see #getCdr()
 	 */
 	public Ty getCdrType() {
@@ -151,17 +133,18 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	/* ************************************************ */
 	
 	/**
-	 * Determines if the length of the current level of the s-expression starting with this {@link GenericConsCell Cell} has
-	 * a length of at least <tt>length</tt> (effectively, are there at least <tt>length</tt>-1 {@link GenericConsCell Cells}
-	 * after this {@link GenericConsCell Cell}?).<br>
-	 * If <tt>length</tt> is negative, it performs the same test, but scans backwards (effectively, are there at least |
-	 * <tt>length</tt>|-1 {@link GenericConsCell Cells} before this {@link GenericConsCell Cell}?).
+	 * Determines if the length of the current level of the s-expression starting with this {@link GenericConsCell} has a
+	 * length of at least {@code length} (effectively, are there at least {@code length-1} {@link GenericConsCell
+	 * GenericConsCells} after this {@link GenericConsCell}?).<br>
+	 * If {@code length} is negative, it performs the same test, but scans backwards (effectively, are there at least
+	 * {@code |length|-1} {@link GenericConsCell GenericConsCells} before this {@link GenericConsCell}?).
 	 * 
 	 * @param length
 	 *            the length to test for
-	 * @return {@code true} if there are at least <tt>length</tt>-1 {@link GenericConsCell Cells} after this
-	 *         {@link GenericConsCell Cell} if <tt>length</tt> is at least 0 or if there are at least |<tt>length</tt>|-1
-	 *         {@link GenericConsCell Cells} before this {@link GenericConsCell Cell}, otherwise it returns {@code false}
+	 * @return {@code true} if there are at least {@code length-1} {@link GenericConsCell GenericConsCells} after this
+	 *         {@link GenericConsCell} if {@code length} is at least 0 or if there are at least {@code |length|-1}
+	 *         {@link GenericConsCell GenericConsCells} before this {@link GenericConsCell}, otherwise it returns
+	 *         {@code false}
 	 */
 	public boolean hasLength(int length) {
 		if (length < 0) {
@@ -181,27 +164,27 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	}
 	
 	/**
-	 * Determines if this {@link GenericConsCell Cell} is the first one in its s-expression.
+	 * Determines if this {@link GenericConsCell} is the first one in its s-expression.
 	 * 
-	 * @return <tt>true</tt> if this {@link GenericConsCell Cell}'s previous cell field is null.
+	 * @return {@code true} if this {@link GenericConsCell GenericConsCell's} previous cell field is {@code null}.
 	 */
 	public boolean isFirstConsCell() {
 		return previous == null;
 	}
 	
 	/**
-	 * A null {@link GenericConsCell Cell} is defined as one whose carType and cdrType are both equal to the empty type.
+	 * A null {@link GenericConsCell} is defined as one whose carType and cdrType are both equal to the empty type.
 	 * 
-	 * @return {@code true} if this {@link GenericConsCell Cell} is a null (or empty) {@link GenericConsCell Cell}
+	 * @return {@code true} if this {@link GenericConsCell} is a null (or empty) {@link GenericConsCell}
 	 */
 	public boolean isNull() {
 		return carType.equals(emptyType) && cdrType.equals(emptyType);
 	}
 	
 	/**
-	 * Determines if this {@link GenericConsCell Cell} is the last one in its s-expression.
+	 * Determines if this {@link GenericConsCell} is the last one in its s-expression.
 	 * 
-	 * @return <tt>true</tt> if this {@link GenericConsCell Cell}'s cdr is not on instance of {@link GenericConsCell Cell}.
+	 * @return {@code true} if this {@link GenericConsCell GenericConsCell's} cdr is not on instance of {@link GenericConsCell}.
 	 */
 	public boolean isLastConsCell() {
 		return !(cdr instanceof GenericConsCell);
@@ -218,7 +201,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 * @param car
 	 *            the new {@link #car} value
 	 * @param carType
-	 *            the {@link GenericConsType GenericType} of the new {@link #car} value
+	 *            the {@link GenericConsType} of the new {@link #car} value
 	 * @return {@code this}
 	 * @see #getCar()
 	 * @see #getCarType()
@@ -238,14 +221,14 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 * @param cdr
 	 *            the new {@link #cdr} value
 	 * @param cdrType
-	 *            the {@link GenericConsType GenericType} new {@link #cdr} value
+	 *            the {@link GenericConsType} for the new {@link #cdr} value
 	 * @return {@code this}
 	 * @see #getCdr()
 	 * @see #getCdrType()
 	 * @see #setCar(Object, GenericConsType)
 	 */
 	public To setCdr(Object cdr, Ty cdrType) {
-		if (this.cdrType == cellType)
+		if (cdr instanceof GenericConsCell)
 			((To) this.cdr).previous = null;
 		this.cdr = cdr;
 		this.cdrType = cdrType == null ? emptyType : cdrType;
@@ -256,13 +239,13 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 * This method appends the given cell or cells to this one, and, if this cell is null as defined in {@link #isNull()},
 	 * overwrites this the contents of this cell with the first cell to be appended.<br>
 	 * If this cell's cdr is also a cell, then {@link #insert(GenericConsCell)} is recursively called on the last cell in the
-	 * inserted s-expression's root level (found via a call to {@link #getLastConsCell()}) with this cell's cdr as the argument.
-	 * If this cell's cdr is not empty and is not a cell, then the cdr of the last cell in the given cell or cells' cdr
-	 * is set to this cell's cdr.
+	 * inserted s-expression's root level (found via a call to {@link #getLastConsCell()}) with this cell's cdr as the
+	 * argument. If this cell's cdr is not empty and is not a cell, then the cdr of the last cell in the given cell or cells'
+	 * cdr is set to this cell's cdr.
 	 * 
 	 * @param next
 	 *            the cell to insert
-	 * @return <tt>this</tt> if {@code this.isNull()} was {@code true}, otherwise <tt>next</tt>
+	 * @return {@code this} if {@code this.isNull()} was {@code true}, otherwise {@code next}
 	 * @see #append(GenericConsCell)
 	 */
 	public To insert(To next) {
@@ -296,7 +279,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	/**
 	 * Appends the given cell to this cell.<br>
 	 * Roughly equivalent in function to {@link #insert(GenericConsCell)} - the only difference is that this returns the last
-	 * {@link GenericConsCell Cell} in the equivalent level of the resulting tree.
+	 * {@link GenericConsCell} in the equivalent level of the resulting tree.
 	 * 
 	 * @param next
 	 *            the cell to insert
@@ -333,9 +316,9 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	}
 	
 	/**
-	 * Splits the cell tree on this {@link GenericConsCell Cell}. After the split, the original tree will end at the
-	 * {@link GenericConsCell Cell} before this one, and this {@link GenericConsCell Cell} will be the first {@link GenericConsCell
-	 * Cell} in the new tree.
+	 * Splits the cell tree on this {@link GenericConsCell}. After the split, the original tree will end at the
+	 * {@link GenericConsCell} before this one, and this {@link GenericConsCell} will be the first {@link GenericConsCell} in
+	 * the new tree.
 	 * 
 	 * @return {@code this}
 	 */
@@ -355,24 +338,24 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	/* ************************************************ */
 	
 	/**
-	 * @return the next {@link GenericConsCell Cell} in this {@link GenericConsCell Cell}'s s-expression or a new, empty
-	 *         {@link GenericConsCell Cell} if there is not one.
+	 * @return the next {@link GenericConsCell} in this {@link GenericConsCell GenericConsCell's} s-expression or a new, empty
+	 *         {@link GenericConsCell} if there is not one.
 	 * @see #getPreviousConsCell()
 	 * @see #getLastConsCell()
 	 */
 	public To getNextConsCell() {
-		return cdr instanceof GenericConsCell ? (To) cdr : constructor.construct(null, emptyType, null, emptyType);
+		return cdr instanceof GenericConsCell ? (To) cdr : null;
 	}
 	
 	/**
-	 * Gets the nth {@link GenericConsCell Cell} after this {@link GenericConsCell Cell} (e.g. {@code getNextCell(1)} is
-	 * equivalent to {@code getNextConsCell()}).<br>
-	 * If <tt>n</tt> is negative, this is equivalent to {@link #getPreviousConsCell(int)} with <tt>n</tt> being positive.
+	 * Gets the nth {@link GenericConsCell} after this {@link GenericConsCell} (e.g. {@code getNextCell(1)} is equivalent to
+	 * {@code getNextConsCell()}).<br>
+	 * If {@code n} is negative, this is equivalent to {@link #getPreviousConsCell(int)} with {@code n} being positive.
 	 * 
 	 * @param n
-	 *            the distance between this {@link GenericConsCell Cell} and the desired {@link GenericConsCell Cell}
-	 * @return the nth {@link GenericConsCell Cell} after this {@link GenericConsCell Cell} in the current level of the tree
-	 *         structure or an empty {@link GenericConsCell Cell} if there is no such {@link GenericConsCell Cell}
+	 *            the distance between this {@link GenericConsCell} and the desired {@link GenericConsCell}
+	 * @return the nth {@link GenericConsCell} after this {@link GenericConsCell} in the current level of the tree structure
+	 *         or {@code null} if there is no such {@link GenericConsCell}
 	 */
 	public To getNextConsCell(int n) {
 		if (n < 0)
@@ -383,8 +366,8 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	}
 	
 	/**
-	 * @return the last {@link GenericConsCell Cell} in its s-expression. If this {@link GenericConsCell Cell} is the last one,
-	 *         it returns itself.
+	 * @return the last {@link GenericConsCell} in its s-expression. If this {@link GenericConsCell} is the last one, it
+	 *         returns itself.
 	 * @see #getNextConsCell()
 	 */
 	public To getLastConsCell() {
@@ -395,24 +378,24 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	}
 	
 	/**
-	 * @return the previous {@link GenericConsCell Cell} in this {@link GenericConsCell Cell}'s s-expression or a new, empty
-	 *         {@link GenericConsCell Cell} if there is not one.
+	 * @return the previous {@link GenericConsCell} in this {@link GenericConsCell GenericConsCell's} s-expression or a new,
+	 *         empty {@link GenericConsCell} if there is not one.
 	 * @see #getNextConsCell()
 	 * @see #getFirstConsCell()
 	 */
 	public To getPreviousConsCell() {
-		return previous == null ? constructor.construct(null, emptyType, null, emptyType) : previous;
+		return previous;
 	}
 	
 	/**
-	 * Gets the nth {@link GenericConsCell Cell} before this {@link GenericConsCell Cell} (e.g. {@code getPreviousCell(1)} is
+	 * Gets the nth {@link GenericConsCell} before this {@link GenericConsCell} (e.g. {@code getPreviousCell(1)} is
 	 * equivalent to {@code getPreviousConsCell()}).<br>
-	 * If <tt>n</tt> is negative, this is equivalent to {@link #getNextConsCell(int)} with <tt>n</tt> being positive.
+	 * If {@code n} is negative, this is equivalent to {@link #getNextConsCell(int)} with {@code n} being positive.
 	 * 
 	 * @param n
-	 *            the distance between this {@link GenericConsCell Cell} and the desired {@link GenericConsCell Cell}
-	 * @return the nth {@link GenericConsCell Cell} before this {@link GenericConsCell Cell} in the current level of the tree
-	 *         structure or an empty {@link GenericConsCell Cell} if there is no such {@link GenericConsCell Cell}
+	 *            the distance between this {@link GenericConsCell} and the desired {@link GenericConsCell}
+	 * @return the nth {@link GenericConsCell} before this {@link GenericConsCell} in the current level of the tree structure
+	 *         or {@code null} if there is no such {@link GenericConsCell}
 	 */
 	public To getPreviousConsCell(int n) {
 		if (n < 0)
@@ -544,7 +527,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	
 	/**
 	 * Generates the hash by calling {@link java.util.Objects#hash(Object...) Objects.hash(Object...)} on the car, carType,
-	 * cdr, and cdrType of this {@link GenericConsCell Cell}.<br>
+	 * cdr, and cdrType of this {@link GenericConsCell}.<br>
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -553,11 +536,12 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	}
 	
 	/**
-	 * {@inheritDoc}<br>
-	 * <i>The first call to {@link java.util.Iterator#next() next()} returns this {@link GenericConsCell cell}</i>
+	 * Returns an {@link Iterator} over the elements in the s-expression at the level of the {@link GenericConsCell} on which
+	 * {@link #iterator()} was called.<br>
+	 * <i>The first call to {@link Iterator#next() next()} returns the {@link GenericConsCell} on which {@link #iterator()}
+	 * was called.</i>
 	 * 
-	 * @return an {@link java.util.Iterator#next() next()} that iterates through the s-expression at the
-	 *         level of the {@link GenericConsCell cell} that it was created on.
+	 * @return an {@link Iterator}
 	 */
 	@Override
 	public Iterator<To> iterator() {

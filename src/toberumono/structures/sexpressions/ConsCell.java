@@ -22,7 +22,7 @@ public class ConsCell extends GenericConsCell<ConsType, ConsCell> {
 	 *            the cdr type
 	 */
 	public ConsCell(Object car, ConsType carType, Object cdr, ConsType cdrType) {
-		super(car, carType, cdr, cdrType, ConsCell::new, ConsType.TOKEN, ConsType.EMPTY);
+		super(car, carType, cdr, cdrType, ConsType.TOKEN, ConsType.EMPTY);
 	}
 	
 	/**
@@ -34,13 +34,13 @@ public class ConsCell extends GenericConsCell<ConsType, ConsCell> {
 	 *            the car type
 	 */
 	public ConsCell(Object car, ConsType carType) {
-		super(car, carType, ConsCell::new, ConsType.TOKEN, ConsType.EMPTY);
+		super(car, carType, ConsType.TOKEN, ConsType.EMPTY);
 	}
 	
 	/**
 	 * Constructs an empty {@link ConsCell}.
 	 */
 	public ConsCell() {
-		super(ConsCell::new, ConsType.TOKEN, ConsType.EMPTY);
+		super(ConsType.TOKEN, ConsType.EMPTY);
 	}
 }
