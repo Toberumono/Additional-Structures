@@ -147,7 +147,9 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 *         {@code false}
 	 */
 	public boolean hasLength(int length) {
-		if (length < 0) {
+		if (length == 0)
+			return true;
+		else if (length < 0) {
 			if (++length == 0)
 				return true;
 			for (GenericConsCell<Ty, To> cur = this; length < 0; cur = cur.getPreviousConsCell(), length++)
@@ -155,12 +157,14 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 					return false;
 			return true;
 		}
-		if (--length == 0)
+		else {
+			if (--length == 0)
+				return true;
+			for (GenericConsCell<Ty, To> cur = this; length > 0; cur = cur.getNextConsCell(), length--)
+				if (cur == null)
+					return false;
 			return true;
-		for (GenericConsCell<Ty, To> cur = this; length > 0; cur = cur.getNextConsCell(), length--)
-			if (cur == null)
-				return false;
-		return true;
+		}
 	}
 	
 	/**
