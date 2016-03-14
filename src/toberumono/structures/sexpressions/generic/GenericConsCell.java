@@ -545,21 +545,31 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 */
 	@Override
 	public Iterator<To> iterator() {
-		return new Iterator<To>() {
-			private To last = constructor.construct(null, emptyType, GenericConsCell.this, cellType);
-			
-			@Override
-			public boolean hasNext() {
-				return last.cdr instanceof GenericConsCell;
-			}
-			
-			@Override
-			public To next() {
-				if (!(last.cdr instanceof GenericConsCell))
-					throw new NoSuchElementException();
-				return (last = (To) last.cdr).singular();
-			}
-			
-		};
+		return new Itr();
+	}
+	
+	private class Itr implements Iterator<To> {
+		private To current = null, next = (To) GenericConsCell.this;
+		
+		@Override
+		public boolean hasNext() {
+			return next != null;
+		}
+		
+		@Override
+		public To next() {
+			if (next == null)
+				throw new NoSuchElementException();
+			current = next;
+			next = next.getNextConsCell();
+			return current;
+		}
+		
+		@Override
+		public void remove() throws IllegalStateException {
+			if (current == null)
+				throw new IllegalStateException();
+			current.remove();
+		}
 	}
 }
