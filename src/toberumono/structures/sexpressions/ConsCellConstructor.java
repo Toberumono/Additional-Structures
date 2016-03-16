@@ -1,19 +1,19 @@
 package toberumono.structures.sexpressions;
 
-import toberumono.structures.sexpressions.generic.GenericConsCell;
+import toberumono.structures.sexpressions.generic.ConsCell;
 import toberumono.structures.sexpressions.generic.GenericConsType;
 
 /**
- * Represents the basic constructor for an implementation of {@link GenericConsCell}.
+ * Represents the basic constructor for an implementation of {@link ConsCell}.
  * 
  * @author Toberumono
  * @param <Ty>
  *            the implementation of {@link GenericConsType} in use
  * @param <To>
- *            the implementation of {@link GenericConsCell} in use
+ *            the implementation of {@link ConsCell} in use
  */
 @FunctionalInterface
-public interface ConsCellConstructor<Ty extends GenericConsType, To extends GenericConsCell<Ty, To>> {
+public interface ConsCellConstructor<Ty extends GenericConsType, To extends ConsCell> {
 	/**
 	 * Constructs a new token with the given fields.
 	 * 

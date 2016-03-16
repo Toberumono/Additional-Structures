@@ -1,5 +1,6 @@
 package toberumono.structures.sexpressions;
 
+import toberumono.structures.sexpressions.generic.ConsCell;
 import toberumono.structures.sexpressions.generic.ConsCellType;
 
 /**

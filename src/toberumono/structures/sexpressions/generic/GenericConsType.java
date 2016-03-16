@@ -3,7 +3,7 @@ package toberumono.structures.sexpressions.generic;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * Base interface for type flags used in {@link GenericConsCell} and its subclasses.<br>
+ * Base interface for type flags used in {@link ConsCell} and its subclasses.<br>
  * Commonly overridden methods are:
  * <ul>
  * <li>{@link #valueToString(Object)}</li>
@@ -31,7 +31,7 @@ public interface GenericConsType {
 	public String getName();
 	
 	/**
-	 * @return whether this <tt>Type</tt> indicates a descender (its associated field is a subclass of {@link GenericConsCell})
+	 * @return whether this <tt>Type</tt> indicates a descender (its associated field is a subclass of {@link ConsCell})
 	 */
 	public boolean marksDescender();
 	
