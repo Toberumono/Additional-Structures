@@ -34,7 +34,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 *            the type that indicates an empty car/cdr field.
 	 */
 	public GenericConsCell(To source, To previous, Ty cellType, Ty emptyType) {
-		this(source.car, source.carType, source.cdr, source.cdrType, cellType, emptyType);
+		this(source.getCar(), source.getCarType(), source.getCdr(), source.getCdrType(), cellType, emptyType);
 		this.previous = previous;
 	}
 	
@@ -125,7 +125,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	
 	@Override
 	public String toString() {
-		return ((car != null ? carType.valueToString(car) + " " : "") + (cdr != null ? cdrType.valueToString(cdr) + " " : "")).trim();
+		return ((getCar() != null ? getCarType().valueToString(getCar()) + " " : "") + (getCdr() != null ? getCdrType().valueToString(getCdr()) + " " : "")).trim();
 	}
 	
 	/* ************************************************ */
@@ -182,16 +182,17 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 * @return {@code true} if this {@link GenericConsCell} is a null (or empty) {@link GenericConsCell}
 	 */
 	public boolean isNull() {
-		return car == null && cdr == null;
+		return getCar() == null && getCarType() == emptyType && getCdr() == null && getCdrType() == emptyType;
 	}
 	
 	/**
 	 * Determines if this {@link GenericConsCell} is the last one in its s-expression.
 	 * 
-	 * @return {@code true} if this {@link GenericConsCell GenericConsCell's} cdr is not on instance of {@link GenericConsCell}.
+	 * @return {@code true} if this {@link GenericConsCell GenericConsCell's} cdr is not on instance of
+	 *         {@link GenericConsCell}.
 	 */
 	public boolean isLastConsCell() {
-		return !(cdr instanceof GenericConsCell);
+		return !(getCdr() instanceof GenericConsCell);
 	}
 	
 	/* ************************************************ */
@@ -212,9 +213,13 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 * @see #setCdr(Object, GenericConsType)
 	 */
 	public To setCar(Object car, Ty carType) {
+		setCarInternal(car, carType);
+		return (To) this;
+	}
+	
+	protected void setCarInternal(Object car, Ty carType) {
 		this.car = car;
 		this.carType = carType == null ? emptyType : carType;
-		return (To) this;
 	}
 	
 	/**
@@ -232,11 +237,17 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 * @see #setCar(Object, GenericConsType)
 	 */
 	public To setCdr(Object cdr, Ty cdrType) {
-		if (cdr instanceof GenericConsCell)
-			((To) this.cdr).previous = null;
+		if (getCdr() instanceof GenericConsCell)
+			((To) getCdr()).previous = null;
+		setCdrInternal(cdr, cdrType);
+		if (getCdr() instanceof GenericConsCell)
+			((To) getCdr()).setPrevious((To) this);
+		return (To) this;
+	}
+	
+	protected void setCdrInternal(Object cdr, Ty cdrType) {
 		this.cdr = cdr;
 		this.cdrType = cdrType == null ? emptyType : cdrType;
-		return (To) this;
 	}
 	
 	/**
@@ -255,28 +266,17 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	public To insert(To next) {
 		if (isNull()) {
 			next.setPrevious(null);
-			car = next.car;
-			carType = next.carType;
-			cdr = next.cdr;
-			cdrType = next.cdrType;
-			if (next.cdr instanceof GenericConsCell)
-				((To) next.cdr).setPrevious((To) this);
+			setCar(next.getCar(), next.getCarType());
+			setCdr(next.getCdr(), next.getCdrType());
 			return (To) this;
 		}
-		next.setPrevious((To) this);
-		if (cdr == null) {
-			//If this was a terminal cell, just set the cdr to pointer to next
-			cdr = next;
-			cdrType = next.cellType;
-			return next;
+		Object cdr = getCdr();
+		Ty type = getCdrType();
+		setCdr(next, next.cellType);
+		if (cdr != null || type != emptyType) { //If this cell has a cdr value
+			To last = next.getLastConsCell();
+			last.setCdr(cdr, type);
 		}
-		To out = next.getLastConsCell();
-		if (cdrType == cellType)
-			out = out.insert((To) cdr);
-		else
-			out.setCdr(cdr, cdrType);
-		cdr = next;
-		cdrType = next.cellType;
 		return next;
 	}
 	
@@ -292,31 +292,21 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 * @see #insert(GenericConsCell)
 	 */
 	public To append(To next) {
-		To out = next.getLastConsCell();
+		To last = next.getLastConsCell();
 		if (isNull()) {
 			next.setPrevious(null);
-			car = next.car;
-			carType = next.carType;
-			cdr = next.cdr;
-			cdrType = next.cdrType;
-			if (next.cdrType == next.cellType)
-				((To) next.cdr).setPrevious((To) this);
-			return (To) this;
+			setCar(next.getCar(), next.getCarType());
+			setCdr(next.getCdr(), next.getCdrType());
+			return last;
 		}
-		next.setPrevious((To) this);
-		if (cdr == null) {
-			//If this was a terminal cell, just set the cdr to point to next
-			cdr = next;
-			cdrType = next.cellType;
-			return out;
+		Object cdr = getCdr();
+		Ty type = getCdrType();
+		setCdr(next, next.cellType);
+		if (cdr != null || type != emptyType) { //If this cell has a cdr value
+			last.setCdr(cdr, type);
+			last = last.getLastConsCell(); //Steps forward to the actual last cell if needed.
 		}
-		if (cdrType == cellType)
-			out = out.append((To) cdr).getLastConsCell();
-		else
-			out.setCdr(cdr, cdrType);
-		cdr = next;
-		cdrType = next.cellType;
-		return next;
+		return last;
 	}
 	
 	/**
@@ -332,8 +322,9 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	}
 	
 	protected void setPrevious(To previous) {
-		if (this.previous != null)
-			this.previous.setCdr(null, null);
+		if (this.getPreviousConsCell() == previous)
+			if (this.getPreviousConsCell() != null)
+				this.getPreviousConsCell().setCdr(null, null);
 		this.previous = previous;
 	}
 	
@@ -342,13 +333,13 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	/* ************************************************ */
 	
 	/**
-	 * @return the next {@link GenericConsCell} in this {@link GenericConsCell GenericConsCell's} s-expression or a new, empty
-	 *         {@link GenericConsCell} if there is not one.
+	 * @return the next {@link GenericConsCell} in this {@link GenericConsCell GenericConsCell's} s-expression or a new,
+	 *         empty {@link GenericConsCell} if there is not one.
 	 * @see #getPreviousConsCell()
 	 * @see #getLastConsCell()
 	 */
 	public To getNextConsCell() {
-		return cdr instanceof GenericConsCell ? (To) cdr : null;
+		return getCdr() instanceof GenericConsCell ? (To) getCdr() : null;
 	}
 	
 	/**
@@ -376,8 +367,8 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 */
 	public To getLastConsCell() {
 		To current = (To) this;
-		while (current.cdr instanceof GenericConsCell)
-			current = (To) current.cdr;
+		while (current.getCdr() instanceof GenericConsCell)
+			current = (To) current.getCdr();
 		return current;
 	}
 	
@@ -416,8 +407,8 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 */
 	public To getFirstConsCell() {
 		To current = (To) this;
-		while (current.previous != null)
-			current = current.previous;
+		while (current.getPreviousConsCell() != null)
+			current = current.getPreviousConsCell();
 		return current;
 	}
 	
@@ -432,8 +423,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 		try {
 			To clone = (To) super.clone();
 			clone.previous = null;
-			clone.cdr = null;
-			clone.cdrType = emptyType;
+			clone.setCdr(null, emptyType);
 			return clone;
 		}
 		catch (CloneNotSupportedException e) {/* This won't occur */}
@@ -447,15 +437,15 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 *            the cell whose car value is to be written to this {@link GenericConsCell}
 	 */
 	public void replaceCar(To cell) {
-		car = cell.car;
-		carType = cell.carType;
+		car = cell.getCar();
+		carType = cell.getCarType();
 	}
 	
 	@Override
 	public int compareTo(To o) {
-		int result = carType.compareValues(car, o.car);
+		int result = getCarType().compareValues(getCar(), o.getCar());
 		if (result == 0)
-			result = cdrType.compareValues(cdr, o.cdr);
+			result = getCdrType().compareValues(getCdr(), o.getCdr());
 		return result;
 	}
 	
@@ -470,10 +460,8 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 			To clone = (To) super.clone();
 			if (clone.car instanceof GenericConsCell)
 				clone.car = ((GenericConsCell<?, ?>) clone.car).clone();
-			if (clone.cdr instanceof GenericConsCell) {
-				clone.cdr = ((To) clone.cdr).clone();
-				((To) clone.cdr).previous = clone;
-			}
+			if (clone.cdr instanceof GenericConsCell)
+				clone.cdr = ((To) clone.cdr).clone(clone);
 			return clone;
 		}
 		catch (CloneNotSupportedException e) {/* This won't occur */}
@@ -515,17 +503,10 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 * @see #getNextConsCell()
 	 */
 	public To remove() {
-		if (this.previous != null) {
-			previous.cdr = cdr;
-			previous.cdrType = cdrType;
-		}
 		To next = getNextConsCell();
-		if (next != null) {
-			next.previous = previous;
-			previous = null;
-			cdr = null;
-			cdrType = emptyType;
-		}
+		if (getPreviousConsCell() != null)
+			getPreviousConsCell().setCdr(getCdr(), getCdrType());
+		setCdrInternal(null, emptyType);
 		return next;
 	}
 	
@@ -536,29 +517,28 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 * @return a {@link String} describing this s-expression's structure
 	 */
 	public String structureString() {
-		String output = "";
+		StringBuilder output = new StringBuilder();
 		GenericConsCell<Ty, To> current = this;
 		do {
-			if (current.car instanceof GenericConsCell)
-				output = output + current.carType.getOpen() + ((GenericConsCell<?, ?>) current.car).structureString() + current.carType.getClose() + " ";
+			if (current.getCar() instanceof GenericConsCell)
+				output.append(current.getCarType().getOpen()).append(((GenericConsCell<?, ?>) current.getCar()).structureString()).append(current.getCarType().getClose());
 			else
-				output = output + current.carType.valueToString(current.car);
-			output = output + ": " + current.carType.toString() + ", ";
-			current = (GenericConsCell<Ty, To>) current.cdr;
-		} while (current instanceof GenericConsCell);
+				output.append(current.getCarType().valueToString(current.getCar()));
+			output.append(": ").append(current.getCarType().toString()).append(", ");
+		} while ((current = current.getNextConsCell()) instanceof GenericConsCell);
 		if (output.length() > 0)
-			output = output.substring(0, output.length() - 2);
-		return output;
+			output.delete(output.length() - 2, output.length());
+		return output.toString();
 	}
 	
 	/**
-	 * Generates the hash by calling {@link java.util.Objects#hash(Object...) Objects.hash(Object...)} on the car, carType,
-	 * cdr, and cdrType of this {@link GenericConsCell}.<br>
+	 * Generates the hash by calling {@link Objects#hash(Object...)} on the {@link #getCar() car}, {@link #getCarType()
+	 * carType}, {@link #getCdr() cdr}, and {@link #getCdrType() cdrType} of the {@link GenericConsCell}.<br>
 	 * {@inheritDoc}
 	 */
 	@Override
 	public int hashCode() {
-		return Objects.hash(car, carType, cdr, cdrType);
+		return Objects.hash(getCar(), getCarType(), getCdr(), getCdrType());
 	}
 	
 	/**
