@@ -1,61 +1,40 @@
 package toberumono.structures.sexpressions;
 
-import toberumono.structures.sexpressions.generic.ConsCellType;
-
 /**
- * An implementation of {@link ConsCellType}.
+ * Base interface for type flags used in {@link ConsCell} and its subclasses.<br>
+ * <b>All implementations of {@link ConsType} <i>must</i> be immutable.</b>
  * 
  * @author Toberumono
  */
-public class ConsType extends ConsCellType {
+public interface ConsType {
 	
 	/**
-	 * A pre-created type that can be used to denote empty values (e.g. the end of a list)
+	 * @return the open symbol for the {@link ConsType} if it indicates a descender, otherwise null
 	 */
-	public static final ConsType EMPTY = new ConsType("Empty") {
-		@Override
-		public String valueToString(Object value) {
-			return "";
-		}
-		
-		@Override
-		public int compareValues(Object value1, Object value2) {
-			return 0;
-		}
-	};
+	public String getOpen();
 	
 	/**
-	 * A pre-created {@link ConsType} that flags the value as an instance of {@link ConsCell}
+	 * @return the close symbol for the {@link ConsType} if it indicates a descender, otherwise null
 	 */
-	public static final ConsType TOKEN = new ConsType("ConsCell") {
-		
-		@Override
-		public ConsCell cloneValue(Object value) {
-			return ((ConsCell) value).clone();
-		}
-	};
+	public String getClose();
 	
 	/**
-	 * Constructs a {@link ConsType} with the given name and descender tokens.
-	 * 
-	 * @param name
-	 *            the name of the type
-	 * @param open
-	 *            the open token
-	 * @param close
-	 *            the close token
+	 * @return the name of the {@link ConsType}
 	 */
-	public ConsType(String name, String open, String close) {
-		super(name, open, close);
+	public String getName();
+	
+	/**
+	 * @return whether the {@link ConsType} indicates a descender (its associated field is a subclass of {@link ConsCell})
+	 */
+	public default boolean marksDescender() {
+		return getOpen() == null;
 	}
-
+	
 	/**
-	 * Constructs a {@link ConsType} with the given name and no descender tokens.
-	 * 
-	 * @param name
-	 *            the name of the type
+	 * Uses the {@link String#hashCode() hashCode} of the name of the {@link ConsType}. In essence,
+	 * {@code hashCode() = getName().hashCode()}<br>
+	 * {@inheritDoc}
 	 */
-	public ConsType(String name) {
-		super(name);
-	}
+	@Override
+	public int hashCode();
 }
