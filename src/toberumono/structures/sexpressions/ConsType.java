@@ -92,6 +92,8 @@ public interface ConsType {
 	 * @return the clone of {@code obj} if one was created successfully, otherwise {@code obj}
 	 */
 	public default Object tryClone(Object obj) {
+		if (obj == null)
+			return obj;
 		if (obj instanceof ConsCell)
 			return ((ConsCell) obj).clone();
 		try {
