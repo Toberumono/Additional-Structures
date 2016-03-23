@@ -1,5 +1,9 @@
 package toberumono.structures.sexpressions;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
  * Base interface for type flags used in {@link ConsCell} and its subclasses.<br>
  * <b>All implementations of {@link ConsType} <i>must</i> be immutable.</b>
@@ -74,5 +78,41 @@ public interface ConsType {
 	 */
 	public default String valueToString(Object value) {
 		return valueToString(value, new StringBuilder()).toString();
+	}
+	
+	/**
+	 * Used by {@link ConsCell#clone()} and {@link ConsCell#structuralClone()} to attempt to clone an object based on its
+	 * {@link ConsType type}. Overriding this method allows for {@link ConsType type}-specific cloning logic.<br>
+	 * By default, this attempts to clone the object via its clone method directly if it implements {@link ConsCell}, via its
+	 * clone method through reflection if it implements {@link Cloneable}, and, if both of those fail, via its copy
+	 * constructor (if one exists) through reflection.
+	 * 
+	 * @param obj
+	 *            the {@link Object} to try to clone
+	 * @return the clone of {@code obj} if one was created successfully, otherwise {@code obj}
+	 */
+	public default Object tryClone(Object obj) {
+		if (obj instanceof ConsCell)
+			return ((ConsCell) obj).clone();
+		try {
+			if (obj instanceof Cloneable) { //If it is cloneable, try to call the clone method
+				try {
+					Method clone = obj.getClass().getMethod("clone");
+					clone.setAccessible(true);
+					return clone.invoke(obj);
+				}
+				catch (NoSuchMethodException e) {/* This is not going to print anything because if the clone method isn't found, we just won't call it. */}
+			}
+			try {
+				Constructor<?> copy = obj.getClass().getConstructor(obj.getClass()); //Otherwise, check if it has a public copy constructor
+				copy.setAccessible(true);
+				return copy.newInstance(obj);
+			}
+			catch (NoSuchMethodException e) {/* This is not going to print anything because if the copy constructor isn't found, we just won't call it. */}
+		}
+		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException e) {
+			e.printStackTrace();
+		}
+		return obj; //If it cannot be cloned or copied, return the object itself
 	}
 }

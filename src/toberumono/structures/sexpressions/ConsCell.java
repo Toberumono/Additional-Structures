@@ -535,8 +535,8 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 			clone.setPreviousInner(previous);
 			if (previous != null)
 				previous.setCdr(clone, previous.getConsCellType());
-			clone.setCar(tryClone(clone.getCar()), clone.getCarType());
-			clone.setCdrInner(tryClone(clone.getCdr()), clone.getCdrType());
+			clone.setCar(clone.getCarType().tryClone(clone.getCar()), clone.getCarType());
+			clone.setCdrInner(clone.getCdrType().tryClone(clone.getCdr()), clone.getCdrType());
 			if (clone.getCdr() instanceof ConsCell)
 				((ConsCell) clone.getCdr()).setPreviousInner(clone);
 			return clone;
@@ -587,31 +587,6 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 			e.printStackTrace();
 			return null;
 		}
-	}
-	
-	private Object tryClone(Object obj) {
-		if (obj instanceof ConsCell)
-			return ((ConsCell) obj).clone();
-		try {
-			if (obj instanceof Cloneable) { //If it is cloneable, try to call the clone method
-				try {
-					Method clone = obj.getClass().getMethod("clone");
-					clone.setAccessible(true);
-					return clone.invoke(obj);
-				}
-				catch (NoSuchMethodException e) {/* This is not going to print anything because if the clone method isn't found, we just won't call it. */}
-			}
-			try {
-				Constructor<?> copy = obj.getClass().getConstructor(obj.getClass()); //Otherwise, check if it has a public copy constructor
-				copy.setAccessible(true);
-				return copy.newInstance(obj);
-			}
-			catch (NoSuchMethodException e) {/* This is not going to print anything because if the copy constructor isn't found, we just won't call it. */}
-		}
-		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException e) {
-			e.printStackTrace();
-		}
-		return obj; //If it cannot be cloned or copied, return the object itself
 	}
 	
 	/**
