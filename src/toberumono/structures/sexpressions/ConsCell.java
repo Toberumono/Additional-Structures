@@ -670,4 +670,12 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 		}
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof ConsCell))
+			return false;
+		ConsCell c = (ConsCell) o;
+		return (getCarType() == null ? c.getCarType() == null : getCarType().equals(c.getCarType())) && (getCar() == null ? c.getCar() == null : getCar().equals(c.getCar())) && (getCdrType() == null
+				? c.getCdrType() == null : getCdrType().equals(c.getCdrType())) && (getCdr() == null ? c.getCdr() == null : getCdr().equals(c.getCdr()));
+	}
 }
