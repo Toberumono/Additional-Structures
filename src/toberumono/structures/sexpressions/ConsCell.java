@@ -100,14 +100,35 @@ public class ConsCell implements Cloneable {
 		return carType;
 	}
 	
+	/**
+	 * Sets the {@code car} value and type of the {@link ConsCell} to the provided value and type.
+	 * 
+	 * @param car
+	 *            the new {@code car} value
+	 * @param carType
+	 *            the {@link ConsType type} of the new {@code car} value
+	 * @return the {@link ConsCell} for chaining purposes
+	 * @see #replaceCar(ConsCell)
+	 * @see #setCdr(Object, ConsType)
+	 */
 	public ConsCell setCar(Object car, ConsType carType) {
 		this.car = car;
 		this.carType = carType;
 		return this;
 	}
 	
-	public ConsCell replaceCar(ConsCell replacement) {
-		return setCar(replacement.getCar(), replacement.getCarType());
+	/**
+	 * Replaces the {@code car} value and type of the {@link ConsCell} with those of the provided {@link ConsCell}.
+	 * 
+	 * @param container
+	 *            the {@link ConsCell} containing the {@code car} value and type with which the {@link ConsCell ConsCell's}
+	 *            {@code car} value and type will be replaced
+	 * @return the {@link ConsCell} for chaining purposes
+	 * @see #setCar(Object, ConsType)
+	 * @see #replaceCdr(ConsCell)
+	 */
+	public ConsCell replaceCar(ConsCell container) {
+		return setCar(container.getCar(), container.getCarType());
 	}
 	
 	/**
@@ -127,6 +148,22 @@ public class ConsCell implements Cloneable {
 		return cdrType;
 	}
 	
+	/**
+	 * Sets the {@code cdr} value and type of the {@link ConsCell} to the provided value and type. If the original
+	 * {@code cdr} value was a {@link ConsCell}, then the value of its {@link #getPrevious() previous} field will be set to
+	 * null. If the new {@code cdr} value is a {@link ConsCell}, then the {@link #getCdr() cdr} value of the {@link ConsCell}
+	 * in its {@link #getPrevious() previous} field will be set to null if its {@link #getPrevious() previous} field was
+	 * non-null. The value of the {@link #getPrevious() previous} field of the new {@code cdr} value will be set to the
+	 * {@link ConsCell} upon which this method was called if the new {@code cdr} value is a {@link ConsCell}.
+	 * 
+	 * @param cdr
+	 *            the new {@code cdr} value
+	 * @param cdrType
+	 *            the {@link ConsType type} of the new {@code cdr} value
+	 * @return the {@link ConsCell} for chaining purposes
+	 * @see #replaceCdr(ConsCell)
+	 * @see #setCar(Object, ConsType)
+	 */
 	public ConsCell setCdr(Object cdr, ConsType cdrType) {
 		if (getCdr() == cdr) { //If the current cdr value is the same as the one being set, just update the type
 			this.cdrType = cdrType;
@@ -140,15 +177,45 @@ public class ConsCell implements Cloneable {
 		return this;
 	}
 	
+	/**
+	 * This controls how the {@link #getCdr() cdr} and {@link #getCdrType() cdrType} fields are assigned. Overriding classes
+	 * that are not using the provided cdr should override this method instead of {@link #setCdr(Object, ConsType)}.
+	 * 
+	 * @param cdr
+	 *            the new {@code cdr} value
+	 * @param cdrType
+	 *            the {@link ConsType type} of the new {@code cdr} value
+	 */
 	protected void setCdrInner(Object cdr, ConsType cdrType) {
 		this.cdr = cdr;
 		this.cdrType = cdrType;
 	}
 	
-	public ConsCell replaceCdr(ConsCell replacement) {
-		return setCdr(replacement.getCdr(), replacement.getCdrType());
+	/**
+	 * Replaces the {@code car} value and type of the {@link ConsCell} with those of the provided {@link ConsCell}. If the
+	 * original {@code cdr} value was a {@link ConsCell}, then the value of its {@link #getPrevious() previous} field will be
+	 * set to null. If the new {@code cdr} value is a {@link ConsCell}, then the {@link #getCdr() cdr} value of the
+	 * {@link ConsCell} in its {@link #getPrevious() previous} field will be set to null if its {@link #getPrevious()
+	 * previous} field was non-null. The value of the {@link #getPrevious() previous} field of the new {@code cdr} value will
+	 * be set to the {@link ConsCell} upon which this method was called if the new {@code cdr} value is a {@link ConsCell}.
+	 * 
+	 * @param container
+	 *            the {@link ConsCell} containing the {@code car} value and type with which the {@link ConsCell ConsCell's}
+	 *            {@code car} value and type will be replaced
+	 * @return the {@link ConsCell} for chaining purposes
+	 * @see #setCdr(Object, ConsType)
+	 * @see #replaceCar(ConsCell)
+	 */
+	public ConsCell replaceCdr(ConsCell container) {
+		return setCdr(container.getCdr(), container.getCdrType());
 	}
 	
+	/**
+	 * The last {@link ConsCell} is defined as the {@link ConsCell} that has a {@code cdr} value that is not an instance of
+	 * {@link ConsCell}.
+	 * 
+	 * @return the last {@link ConsCell} in the current level of the {@link ConsCell ConsCell's} tree
+	 */
 	public ConsCell getLast() {
 		for (ConsCell current = this;; current = current.getNext())
 			if (current.isLast())
@@ -176,6 +243,12 @@ public class ConsCell implements Cloneable {
 		return setCdr(next, type);
 	}
 	
+	/**
+	 * The first {@link ConsCell} is defined as the {@link ConsCell} that has a {@code null} {@link #getPrevious() previous}
+	 * field.
+	 * 
+	 * @return the first {@link ConsCell} in the current level of the {@link ConsCell ConsCell's} tree
+	 */
 	public ConsCell getFirst() {
 		for (ConsCell current = this;; current = current.getPrevious())
 			if (current.isFirst())
@@ -214,14 +287,26 @@ public class ConsCell implements Cloneable {
 		this.previous = previous;
 	}
 	
+	/**
+	 * @return {@code true} iff the {@link ConsCell} does not have a {@link #getPrevious() previous} {@link ConsCell} (that
+	 *         is, {@link #getPrevious()} returns {@code null})
+	 */
 	public boolean isFirst() {
 		return getPrevious() == null;
 	}
 	
+	/**
+	 * @return {@code true} iff the {@link ConsCell} does not have a {@link #getNext() next} {@link ConsCell} (that is,
+	 *         {@link #getNext()} returns {@code null})
+	 */
 	public boolean isLast() {
 		return getNext() == null;
 	}
 	
+	/**
+	 * @return {@code true} iff the types {@link ConsCell ConsCell's} {@code car} and {@code cdr} values are both the
+	 *         {@link ConsType type} returned by {@link #getEmptyType()}.
+	 */
 	public boolean isEmpty() {
 		return getCarType() == getEmptyType() && getCdrType() == getEmptyType();
 	}
@@ -252,6 +337,7 @@ public class ConsCell implements Cloneable {
 		return l;
 	}
 	
+	@Override
 	public int hashCode() {
 		return Objects.hash(getCar(), getCarType(), getCdr(), getCdrType());
 	}
