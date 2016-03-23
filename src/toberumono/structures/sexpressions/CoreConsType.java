@@ -9,11 +9,16 @@ public enum CoreConsType implements ConsType {
 	/**
 	 * The default type used to indicate empty values
 	 */
-	EMPTY(null, null, "empty"),
+	EMPTY(null, null, "empty") {
+		@Override
+		public StringBuilder valueToString(Object value, StringBuilder sb) { //Empty values shouldn't print anything
+			return sb;
+		}
+	},
 	/**
-	 * The default type used to indicate values that implement {@link ConsCell}
+	 * The default type used to indicate cdr values that implement {@link ConsCell}
 	 */
-	CONS_CELL("(", ")", "ConsCell");
+	CONS_CELL(null, null, "ConsCell");
 	private final String open, close, name;
 	
 	CoreConsType(String open, String close, String name) {

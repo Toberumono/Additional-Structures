@@ -73,4 +73,9 @@ public class BasicConsType implements ConsType {
 		return getName().equals(c.getName()) && (getOpen() == null ? c.getOpen() == null : getOpen().equals(c.getOpen())) &&
 				(getClose() == null ? c.getClose() == null : getClose().equals(c.getClose()));
 	}
+	
+	@Override
+	public String toString() {
+		return getName();
+	}
 }

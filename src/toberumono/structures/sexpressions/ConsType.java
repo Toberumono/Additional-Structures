@@ -27,7 +27,7 @@ public interface ConsType {
 	 * @return whether the {@link ConsType} indicates a descender (its associated field is a subclass of {@link ConsCell})
 	 */
 	public default boolean marksDescender() {
-		return getOpen() == null;
+		return getOpen() != null;
 	}
 	
 	/**
@@ -37,4 +37,42 @@ public interface ConsType {
 	 */
 	@Override
 	public int hashCode();
+	
+	/**
+	 * Used by {@link ConsCell#toString()} to produce type-specific {@link String} representations of values.<br>
+	 * The default method just brackets the value with the {@link #getOpen() open} and {@link #getClose() close} symbols if
+	 * applicable. However, this can be used to generate more detailed output if desired.
+	 * 
+	 * @param value
+	 *            the {@link Object} to convert to a {@link String}
+	 * @param sb
+	 *            the {@link StringBuilder} into which the representation should be written
+	 * @return the {@link String} representation of {@code value} as a function of its {@link ConsType type}
+	 */
+	public default StringBuilder valueToString(Object value, StringBuilder sb) {
+		if (marksDescender())
+			if (value instanceof ConsCell) {
+				sb.append(getOpen());
+				((ConsCell) value).toString(sb);
+				return sb.append(getClose());
+			}
+			else
+				return sb.append(getOpen()).append(value).append(getClose());
+		else if (value instanceof ConsCell)
+			return ((ConsCell) value).toString(sb);
+		else
+			return sb.append(value);
+	}
+	
+	/**
+	 * Used by {@link ConsCell#toString()} to produce type-specific {@link String} representations of values.<br>
+	 * This method forwards to {@link #valueToString(Object, StringBuilder)} and it should be left that way.
+	 * 
+	 * @param value
+	 *            the {@link Object} to convert to a {@link String}
+	 * @return the {@link String} representation of {@code value} as a function of its {@link ConsType type}
+	 */
+	public default String valueToString(Object value) {
+		return valueToString(value, new StringBuilder()).toString();
+	}
 }

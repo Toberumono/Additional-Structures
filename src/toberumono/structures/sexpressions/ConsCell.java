@@ -678,4 +678,50 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 		return (getCarType() == null ? c.getCarType() == null : getCarType().equals(c.getCarType())) && (getCar() == null ? c.getCar() == null : getCar().equals(c.getCar())) && (getCdrType() == null
 				? c.getCdrType() == null : getCdrType().equals(c.getCdrType())) && (getCdr() == null ? c.getCdr() == null : getCdr().equals(c.getCdr()));
 	}
+	
+	@Override
+	public String toString() {
+		return toString(new StringBuilder()).toString();
+	}
+	
+	/**
+	 * An implementation of {@link #toString()} that writes the {@link String} representation of the {@link ConsCell} into
+	 * the given {@link StringBuilder}.
+	 * 
+	 * @param sb
+	 *            the {@link StringBuilder} into which the {@link String} representation of the {@link ConsCell} should be
+	 *            written
+	 * @return {@code sb} for chaining purposes
+	 */
+	public StringBuilder toString(StringBuilder sb) {
+		getCarType().valueToString(getCar(), sb);
+		if (getCdrType() != getEmptyType()) {
+			sb.append(" ");
+			getCdrType().valueToString(getCdr(), sb);
+		}
+		return sb;
+	}
+	
+	/**
+	 * Generates a {@link String} that shows the structure of the {@link ConsCell ConsCell's} s-expression.<br>
+	 * This is primarily a debugging function.
+	 * 
+	 * @return a {@link String} describing the {@link ConsCell ConsCell's} s-expression's structure
+	 */
+	public String structureString() {
+		StringBuilder sb = new StringBuilder();
+		for (ConsCell current = this; current != null; current = current.getNext()) {
+			if (current.getCarType() == current.getEmptyType())
+				continue;
+			else if (current.getCarType().marksDescender())
+				sb.append(current.getCarType().getOpen()).append(current.getCar() instanceof ConsCell ? ((ConsCell) current.getCar()).structureString() : String.valueOf(current.getCar()))
+						.append(current.getCarType().getClose());
+			else
+				sb.append(current.getCar() instanceof ConsCell ? ((ConsCell) current.getCar()).structureString() : String.valueOf(current.getCar()));
+			sb.append(": ").append(current.getCarType()).append(", ");
+		}
+		if (sb.length() > 2)
+			sb.delete(sb.length() - 2, sb.length());
+		return sb.toString().trim();
+	}
 }
