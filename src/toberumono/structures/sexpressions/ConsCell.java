@@ -182,6 +182,7 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 	/**
 	 * This controls how the {@link #getCdr() cdr} and {@link #getCdrType() cdrType} fields are assigned. Overriding classes
 	 * that are not using the provided cdr should override this method instead of {@link #setCdr(Object, ConsType)}.
+	 * <b>Implementations of this method must <i>not</i> perform any processing beyond simple field assignment.</b>
 	 * 
 	 * @param cdr
 	 *            the new {@code cdr} value
@@ -224,10 +225,24 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 				return current;
 	}
 	
+	/**
+	 * The next {@link ConsCell} is the {@code cdr} value of the {@link ConsCell} if the {@code cdr} value is an instance of
+	 * {@link ConsCell}.
+	 * 
+	 * @return the next {@link ConsCell} in the tree if there is one, otherwise {@code null}
+	 */
 	public ConsCell getNext() {
 		return getCdr() instanceof ConsCell ? (ConsCell) getCdr() : null;
 	}
 	
+	/**
+	 * The next {@link ConsCell} is the {@code cdr} value of the {@link ConsCell} if the {@code cdr} value is an instance of
+	 * {@link ConsCell}.
+	 * 
+	 * @param n
+	 *            the number of {@link ConsCell ConsCells} by which to step forward
+	 * @return the nth-next {@link ConsCell} in the tree if there is one, otherwise {@code null}
+	 */
 	public ConsCell getNext(int n) {
 		if (n < 0) //If n < 0, this is equivalent to getting the -nth previous ConsCell
 			return getPrevious(-n);
@@ -237,10 +252,32 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 		return out;
 	}
 	
+	/**
+	 * Sets the next {@link ConsCell} in the {@link ConsCell ConsCell's} tree. This forwards to
+	 * {@link #setNext(ConsCell, ConsType)} with the {@link ConsType} from {@link #getConsCellType()}.<br>
+	 * <b>Note:</b> the next {@link ConsCell} is still stored in the {@link #getCdr() cdr} value.
+	 * 
+	 * @param next
+	 *            the new next {@link ConsCell}
+	 * @return the current {@link ConsCell} (for chaining purposes)
+	 * @see #setNext(ConsCell, ConsType)
+	 * @see #setCdr(Object, ConsType)
+	 */
 	public ConsCell setNext(ConsCell next) {
 		return setNext(next, getConsCellType());
 	}
 	
+	/**
+	 * Sets the next {@link ConsCell} in the {@link ConsCell ConsCell's} tree. This forwards to
+	 * {@link #setCdr(Object, ConsType)}.<br>
+	 * <b>Note:</b> the next {@link ConsCell} is still stored in the {@link #getCdr() cdr} value.
+	 * 
+	 * @param next
+	 *            the new next {@link ConsCell}
+	 * @param type
+	 *            the {@link ConsType type} of {@code next}
+	 * @return the current {@link ConsCell} (for chaining purposes)
+	 */
 	public ConsCell setNext(ConsCell next, ConsType type) {
 		return setCdr(next, type);
 	}
@@ -257,10 +294,18 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 				return current;
 	}
 	
+	/**
+	 * @return the previous (or parent) {@link ConsCell} in the tree
+	 */
 	public ConsCell getPrevious() {
 		return previous;
 	}
 	
+	/**
+	 * @param n
+	 *            the number of {@link ConsCell ConsCells} by which to step backward
+	 * @return the nth-previous (or parent) {@link ConsCell} in the tree
+	 */
 	public ConsCell getPrevious(int n) {
 		if (n < 0) //If n < 0, this is equivalent to getting the -nth next ConsCell
 			return getNext(-n);
@@ -280,7 +325,9 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 	}
 	
 	/**
-	 * Override this to change how the previous {@link ConsCell} is set.
+	 * This controls how the {@link #getPrevious() previous} field is assigned. Overriding classes that are not using the
+	 * provided previous field should override this method instead of {@link #setPrevious(ConsCell)}.<br>
+	 * <b>Implementations of this method must <i>not</i> perform any processing beyond simple field assignment.</b>
 	 * 
 	 * @param previous
 	 *            the new previous {@link ConsCell}
@@ -313,25 +360,39 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 		return getCarType() == getEmptyType() && getCdrType() == getEmptyType();
 	}
 	
-	public boolean hasLength(int l) {
-		if (l == 0) //If n == 0, then the answer is obviously true
+	/**
+	 * Determines whether there are at least {@code n} {@link ConsCell ConsCells} including the one on which the method was
+	 * called in the current level of the tree with the {@link ConsCell} on which this method was called as its root. If
+	 * {@code n} is negative, it looks backwards instead of forwards. (So, if {@code n} is {@code -1, 0, 1}, the method will
+	 * always return {@code true})
+	 * 
+	 * @param n
+	 *            the number of {@link ConsCell ConsCells} to test for
+	 * @return {@code true} iff there are at least {@code n} {@link ConsCell ConsCells} in the direction being checked
+	 */
+	public boolean hasLength(int n) {
+		if (n == 0) //If n == 0, then the answer is always true
 			return true;
-		else if (l > 0) {
-			if (--l != 0) //If n == 1, we are effectively checking whether the current ConsCell exists
-				for (ConsCell current = this; l > 0 && current != null; l--)
+		else if (n > 0) {
+			if (--n != 0) //If n == 1, we are effectively checking whether the current ConsCell exists
+				for (ConsCell current = this; n > 0 && current != null; n--)
 					if ((current = current.getNext()) == null)
 						return false;
 			return true;
 		}
 		else { //If n < 0, look backwards
-			if (++l != 0) //If n == -1, we are effectively checking whether the current ConsCell exists
-				for (ConsCell current = this; l < 0 && current != null; l++)
+			if (++n != 0) //If n == -1, we are effectively checking whether the current ConsCell exists
+				for (ConsCell current = this; n < 0 && current != null; n++)
 					if ((current = current.getPrevious()) == null)
 						return false;
 			return true;
 		}
 	}
 	
+	/**
+	 * @return the number of {@link ConsCell ConsCells} in the first level tree with the {@link ConsCell} on which this
+	 *         method was called as its root
+	 */
 	public int length() {
 		int l = 0;
 		for (ConsCell current = this; current != null; current = current.getNext())
@@ -344,6 +405,22 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 		return Objects.hash(getCar(), getCarType(), getCdr(), getCdrType());
 	}
 	
+	/**
+	 * This method appends the given {@link ConsCell} or {@link ConsCell ConsCells} to this one, and, if this cell is null as
+	 * defined in {@link #isEmpty()}, overwrites this the contents of this {@link ConsCell} with the first {@link ConsCell}
+	 * to be inserted.<br>
+	 * If this {@link ConsCell ConsCell's} {@code cdr} value is also a {@link ConsCell}, then {@link #insert(ConsCell)} is
+	 * recursively called on the last cell in the inserted tree's root level (found via a call to {@link #getLast()}) with
+	 * this {@link ConsCell ConsCell's} {@code cdr} value and type as the arguments. If this {@link ConsCell ConsCell's}
+	 * {@code cdr} value is not empty and is not a {@link ConsCell}, then the {@code cdr} value of the last {@link ConsCell}
+	 * in the given {@link ConsCell ConsCell's} or {@link ConsCell ConsCells'} {@code cdr} value is set to this
+	 * {@link ConsCell ConsCell's} {@code cdr} value.
+	 * 
+	 * @param next
+	 *            the {@link ConsCell} to insert
+	 * @return {@code this} if {@code this.isEmpty()} was {@code true}, otherwise {@code next}
+	 * @see #append(ConsCell)
+	 */
 	public ConsCell insert(ConsCell next) {
 		if (isEmpty()) {
 			replaceCar(next);
@@ -357,6 +434,17 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 		return next;
 	}
 	
+	/**
+	 * Appends the given {@link ConsCell} to the {@link ConsCell} on which this method was called.<br>
+	 * Roughly equivalent in function to {@link #insert(ConsCell)} - the only difference is that this returns the last
+	 * {@link ConsCell} in the equivalent level of the resulting tree.
+	 * 
+	 * @param next
+	 *            the cell to append
+	 * @return the last cell in the equivalent level of the resulting cell tree. Equivalent to
+	 *         {@code cell.insert(next).getLastConsCell()}.
+	 * @see #insert(ConsCell)
+	 */
 	public ConsCell append(ConsCell next) {
 		if (isEmpty()) {
 			replaceCar(next);
@@ -369,6 +457,12 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 		return next.getLast();
 	}
 	
+	/**
+	 * Removes the {@link ConsCell} from the tree and returns the one after it.
+	 * 
+	 * @return the next {@link ConsCell} in the tree as determined by {@link #getNext()}
+	 * @see #getNext()
+	 */
 	public ConsCell remove() {
 		ConsCell next = getNext();
 		if (getPrevious() != null)
@@ -379,12 +473,26 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 		return next;
 	}
 	
+	/**
+	 * Splits the cell tree on this {@link ConsCell}. After the split, the original tree will end at the {@link ConsCell}
+	 * before the one on which this method was called, and the {@link ConsCell} on which this method was called will be the
+	 * root {@link ConsCell} of the new tree.
+	 * 
+	 * @return {@code this}
+	 */
 	public ConsCell split() {
 		if (getPrevious() != null)
 			getPrevious().setCdr(null, getEmptyType());
 		return this;
 	}
 	
+	/**
+	 * Returns a shallow copy of this {@link ConsCell} with only the {@code car} value and {@link ConsType type}.<br>
+	 * This effectively creates a {@link ConsCell} with a pointer to the same car value as the {@link ConsCell} on which this
+	 * method was called but separate from its tree.
+	 * 
+	 * @return a shallow copy of the {@link ConsCell} that is separate from the tree
+	 */
 	public ConsCell singular() {
 		try {
 			ConsCell clone = (ConsCell) super.clone();
@@ -503,7 +611,7 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException e) {
 			e.printStackTrace();
 		}
-		return obj; //As a last resort, return the object itself
+		return obj; //If it cannot be cloned or copied, return the object itself
 	}
 	
 	/**
