@@ -3,6 +3,8 @@ package toberumono.structures.sexpressions;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
@@ -10,7 +12,7 @@ import java.util.Objects;
  * 
  * @author Toberumono
  */
-public class ConsCell implements Cloneable {
+public class ConsCell implements Cloneable, Iterable<ConsCell> {
 	private Object car, cdr;
 	private ConsType carType, cdrType;
 	private ConsCell previous;
@@ -521,4 +523,43 @@ public class ConsCell implements Cloneable {
 	protected ConsType getConsCellType() {
 		return CoreConsType.CONS_CELL;
 	}
+	
+	/**
+	 * Returns an {@link Iterator} over the elements in the s-expression at the level of the {@link ConsCell} on which
+	 * {@link #iterator()} was called.<br>
+	 * <i>The first call to {@link Iterator#next() next()} returns the {@link ConsCell} on which {@link #iterator()} was
+	 * called.</i>
+	 * 
+	 * @return an {@link Iterator}
+	 */
+	@Override
+	public Iterator<ConsCell> iterator() {
+		return new Itr();
+	}
+	
+	private class Itr implements Iterator<ConsCell> {
+		private ConsCell current = null, next = ConsCell.this;
+		
+		@Override
+		public boolean hasNext() {
+			return next != null;
+		}
+		
+		@Override
+		public ConsCell next() {
+			if (next == null)
+				throw new NoSuchElementException();
+			current = next;
+			next = next.getNext();
+			return current;
+		}
+		
+		@Override
+		public void remove() throws IllegalStateException {
+			if (current == null)
+				throw new IllegalStateException();
+			current.remove();
+		}
+	}
+	
 }
