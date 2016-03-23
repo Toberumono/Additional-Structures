@@ -477,7 +477,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 	 * @return a clone of this {@link GenericConsCell}
 	 */
 	public To clone(To previous) {
-		To clone = (To) clone();
+		To clone = clone();
 		clone.previous = previous;
 		return clone;
 	}
@@ -525,7 +525,7 @@ public class GenericConsCell<Ty extends GenericConsType, To extends GenericConsC
 			else
 				output.append(current.getCarType().valueToString(current.getCar()));
 			output.append(": ").append(current.getCarType().toString()).append(", ");
-		} while ((current = current.getNextConsCell()) instanceof GenericConsCell);
+		} while ((current = current.getNextConsCell()) != null);
 		if (output.length() > 0)
 			output.delete(output.length() - 2, output.length());
 		return output.toString();
