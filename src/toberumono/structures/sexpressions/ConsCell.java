@@ -5,7 +5,9 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
- * Implementation of a combination doubly-linked list and s-expression structure based on cons cells from Lisp.
+ * Implementation of a combination doubly-linked list and s-expression structure based on cons cells from Lisp.<br>
+ * In order for cloning to work, this package must have the "accessDeclaredMembers" {@link RuntimePermission} if a
+ * {@link SecurityManager} is enabled.
  * 
  * @author Toberumono
  */
@@ -504,8 +506,9 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 	}
 	
 	/**
-	 * This method will attempt to clone the car and cdr values via a public clone method (first) and a public copy
-	 * constructor (second). If neither the method nor the constructor are available, it will use the existing value.<br>
+	 * This method will attempt to clone the {@link #getCar() car} and {@link #getCdr() cdr} values via the
+	 * {@link ConsType#tryClone(Object)} methods from the {@link #getCarType() carType} and {@link #getCdrType() cdrType}
+	 * values.<br>
 	 * {@inheritDoc}
 	 * 
 	 * @return an independent clone of the {@link ConsCell} with the {@link ConsCell} on which the method was called as the
@@ -517,9 +520,9 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 	}
 	
 	/**
-	 * Clones the structural elements of the {@link ConsCell ConsCell's} tree only. That is, only car and cdr elements that
-	 * implement {@link ConsCell} are cloned. All cloning is performed via recursive calls to {@link #structuralClone()} or
-	 * {@link #structuralClone(ConsCell)} as needed.
+	 * This method will attempt to clone the {@link #getCar() car} and {@link #getCdr() cdr} values via the
+	 * {@link ConsType#tryClone(Object)} methods from the {@link #getCarType() carType} and {@link #getCdrType() cdrType}
+	 * values.
 	 * 
 	 * @param previous
 	 *            the previous {@link ConsCell} in the tree (effectively the cloned {@link ConsCell ConsCell's} parent)
@@ -538,9 +541,9 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 				((ConsCell) clone.getCdr()).setPreviousInner(clone);
 			return clone;
 		}
-		catch (CloneNotSupportedException e) { //This cannot occur
-			e.printStackTrace();
-			return null;
+		catch (CloneNotSupportedException e) {
+			// this shouldn't happen, since we are Cloneable
+			throw new InternalError(e);
 		}
 	}
 	
@@ -580,9 +583,9 @@ public class ConsCell implements Cloneable, Iterable<ConsCell> {
 			}
 			return clone;
 		}
-		catch (CloneNotSupportedException e) { //This cannot occur
-			e.printStackTrace();
-			return null;
+		catch (CloneNotSupportedException e) {
+			// this shouldn't happen, since we are Cloneable
+			throw new InternalError(e);
 		}
 	}
 	
