@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * 
  * @author Toberumono
  */
-public class VersionNumber implements Comparable<VersionNumber>, Serializable {
+public class VersionNumber implements Comparable<VersionNumber>, Serializable, Cloneable {
 	private static final Pattern versionSplitter = Pattern.compile(".", Pattern.LITERAL), validElement = Pattern.compile("[0-9A-Za-z\\-]+"), validNumeric = Pattern.compile("[0-9]+");
 	private static final Pattern strictVersionPattern = Pattern.compile( //group 4 = prerelease, group 9 = metadata
 			"(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(\\-((0|[1-9][0-9]*|[0-9A-Za-z\\-]+)(\\.(0|[1-9][0-9]*|[0-9A-Za-z\\-]+))*))?(\\+([0-9A-Za-z\\-]+(\\.[0-9A-Za-z\\-]+)*))?");
@@ -104,7 +104,7 @@ public class VersionNumber implements Comparable<VersionNumber>, Serializable {
 	 * @param patch
 	 *            the patch version number; must be an integer greater than or equal to 0
 	 * @param prerelease
-	 *            the prerelease elements; the array can be {@code null} (indicating no prerelease section), but individual
+	 *            the prerelease values; the array can be {@code null} (indicating no prerelease section), but individual
 	 *            elements cannot be {@code null}
 	 * @throws InvalidVersionFormatException
 	 *             if {@code major}, {@code minor}, or {@code patch} are less than 0
@@ -125,7 +125,7 @@ public class VersionNumber implements Comparable<VersionNumber>, Serializable {
 	 * @param patch
 	 *            the patch version number; must be an integer greater than or equal to 0
 	 * @param prerelease
-	 *            the prerelease elements; the array can be {@code null} (indicating no prerelease section), but individual
+	 *            the prerelease values; the array can be {@code null} (indicating no prerelease section), but individual
 	 *            elements cannot be {@code null}
 	 * @param metadata
 	 *            the metadata elements; the array can be {@code null} (indicating no metadata section), but individual
@@ -163,6 +163,43 @@ public class VersionNumber implements Comparable<VersionNumber>, Serializable {
 		representation = null;
 		unmodifiablePrerelease = null;
 		unmodifiableMetadata = null;
+	}
+	
+	/**
+	 * Computes and caches the numeric versions of applicable prerelease values and cleans up the {@link String} versions of
+	 * those values (removes leading zeroes).
+	 */
+	private void cachePrereleaseNumbers() {
+		if (prereleaseNumbers != null)
+			return;
+		prereleaseNumbers = new int[prerelease.length];
+		for (int i = 0; i < prerelease.length; i++) {
+			if (validNumeric.matcher(prerelease[i]).matches()) { //Enforces that all numbers are positive (as per the spec on semver.org)
+				prereleaseNumbers[i] = Integer.parseInt(prerelease[i]);
+				prerelease[i] = String.valueOf(prereleaseNumbers[i]); //This automatically strips any leading zeroes in numeric fields
+			}
+		}
+	}
+	
+	/**
+	 * Computes and caches the syntactically correct {@link String} representation of the {@link VersionNumber}.
+	 */
+	private void cacheSyntacticallyCorrectString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.version[0]).append('.').append(this.version[1]).append('.').append(this.version[2]);
+		if (prerelease.length > 0) {
+			cachePrereleaseNumbers();
+			appendArray(sb.append('-'), prerelease);
+		}
+		if (metadata.length > 0)
+			appendArray(sb.append('+'), metadata);
+		representation = sb.toString();
+	}
+	
+	private static <T> void appendArray(StringBuilder sb, T[] array) {
+		for (int i = 0, lim = array.length - 1; i < lim; i++)
+			sb.append(array[i]).append('.');
+		sb.append(array[array.length - 1]); //Don't append a '.' after the last element
 	}
 	
 	/**
@@ -310,41 +347,14 @@ public class VersionNumber implements Comparable<VersionNumber>, Serializable {
 		return 0;
 	}
 	
-	/**
-	 * Computes and caches the numeric versions of applicable prerelease values and cleans up the {@link String} versions of
-	 * those values (removes leading zeroes).
-	 */
-	private void cachePrereleaseNumbers() {
-		if (prereleaseNumbers != null)
-			return;
-		prereleaseNumbers = new int[prerelease.length];
-		for (int i = 0; i < prerelease.length; i++) {
-			if (validNumeric.matcher(prerelease[i]).matches()) { //Enforces that all numbers are positive (as per the spec on semver.org)
-				prereleaseNumbers[i] = Integer.parseInt(prerelease[i]);
-				prerelease[i] = String.valueOf(prereleaseNumbers[i]); //This automatically strips any leading zeroes in numeric fields
-			}
+	@Override
+	public VersionNumber clone() {
+		try {
+			return (VersionNumber) super.clone();
 		}
-	}
-	
-	/**
-	 * Computes and caches the syntactically correct {@link String} representation of the {@link VersionNumber}.
-	 */
-	private void cacheSyntacticallyCorrectString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(this.version[0]).append('.').append(this.version[1]).append('.').append(this.version[2]);
-		if (prerelease.length > 0) {
-			cachePrereleaseNumbers();
-			appendArray(sb.append('-'), prerelease);
+		catch (CloneNotSupportedException e) {
+			throw new InternalError(e); //This shouldn't happen because we are Cloneable
 		}
-		if (metadata.length > 0)
-			appendArray(sb.append('+'), metadata);
-		representation = sb.toString();
-	}
-	
-	private static <T> void appendArray(StringBuilder sb, T[] array) {
-		for (int i = 0, lim = array.length - 1; i < lim; i++)
-			sb.append(array[i]).append('.');
-		sb.append(array[array.length - 1]); //Don't append a '.' after the last element
 	}
 	
 	@Override
