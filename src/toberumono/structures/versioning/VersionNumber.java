@@ -349,19 +349,11 @@ public class VersionNumber implements Comparable<VersionNumber>, Serializable {
 	
 	@Override
 	public boolean equals(Object other) {
-		if (other == null || !(other instanceof VersionNumber))
+		if (!(other instanceof VersionNumber))
 			return false;
 		VersionNumber o = (VersionNumber) other;
-		if (version.length != o.version.length)
+		if (!hasSamePrereleaseVersion(o))
 			return false;
-		for (int i = 0; i < version.length; i++)
-			if (version[i] != o.version[i])
-				return false;
-		if (prerelease.length != o.prerelease.length)
-			return false;
-		for (int i = 0; i < prerelease.length; i++)
-			if (!prerelease[i].equals(o.prerelease[i]))
-				return false;
 		if (metadata.length != o.metadata.length)
 			return false;
 		for (int i = 0; i < metadata.length; i++)
@@ -382,10 +374,8 @@ public class VersionNumber implements Comparable<VersionNumber>, Serializable {
 	@Override
 	public int hashCode() {
 		if (hash == 0) {
-			hash = 17;
-			hash = hash * 31 + Arrays.hashCode(version);
-			hash = hash * 31 + Arrays.hashCode(prerelease);
-			hash = hash * 31 + Arrays.hashCode(metadata);
+			cachePrereleaseNumbers();
+			hash = Arrays.deepHashCode(new Object[]{version, prerelease, metadata});
 		}
 		return hash;
 	}
