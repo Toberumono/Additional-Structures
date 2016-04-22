@@ -238,7 +238,7 @@ public abstract class AbstractConsCell<C extends AbstractConsCell<C, T>, T exten
 	
 	@Override
 	public boolean isLast() {
-		return getClass().isInstance(getCdr());
+		return !getClass().isInstance(getCdr());
 	}
 	
 	@Override
