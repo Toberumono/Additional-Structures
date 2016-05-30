@@ -180,9 +180,9 @@ public class SortedList<T> extends ArrayList<T> implements Cloneable {
 			@SuppressWarnings("unchecked")
 			T e = (T) element;
 			int item = getPos(e, 0, size());
-			if (item == size())
-				return item > 0 && comparator.compare(get(item - 1), e) == 0 ? item - 1 : -1;
-			return comparator.compare(get(item), e) == 0 ? item : -1;
+			if (item == 0)
+				return -1;
+			return comparator.compare(get(item - 1), e) == 0 ? item - 1 : -1;
 		}
 		catch (ClassCastException e) {
 			return super.indexOf(element);
