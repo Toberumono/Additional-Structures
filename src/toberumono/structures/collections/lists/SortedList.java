@@ -181,7 +181,7 @@ public class SortedList<T> extends ArrayList<T> implements Cloneable {
 			T e = (T) element;
 			int item = getPos(e, 0, size());
 			if (item == size())
-				return item > 1 && comparator.compare(get(item), e) == 0 ? item - 1 : -1;
+				return item > 0 && comparator.compare(get(item - 1), e) == 0 ? item - 1 : -1;
 			return comparator.compare(get(item), e) == 0 ? item : -1;
 		}
 		catch (ClassCastException e) {
