@@ -128,7 +128,9 @@ public class SortedList<T> extends ArrayList<T> implements Cloneable {
 	public boolean add(T element) {
 		if (!sortingEnabled || comparator == null)
 			return super.add(element);
-		super.add(getPos(element, 0, size()), element);
+		int pos = getPos(element);
+		for (;pos < size() - 1 && comparator.compare(element, get(pos + 1)) == 0; pos++);
+		super.add(pos, element);
 		return true;
 	}
 	
@@ -176,13 +178,14 @@ public class SortedList<T> extends ArrayList<T> implements Cloneable {
 	 */
 	@Override
 	public int indexOf(Object element) {
+		if (size() == 0)
+			return -1;
 		try {
 			@SuppressWarnings("unchecked")
 			T e = (T) element;
-			int item = getPos(e, 0, size());
-			if (item == 0)
-				return -1;
-			return comparator.compare(get(item - 1), e) == 0 ? item - 1 : -1;
+			int pos = getPos(e);
+			for (;pos > 0 && comparator.compare(e, get(pos - 1)) == 0; pos--); //getPos returns the index after the element's location in the list under certain circumstances
+			return pos < size() && comparator.compare(get(pos), e) == 0 ? pos : -1;
 		}
 		catch (ClassCastException e) {
 			return super.indexOf(element);
@@ -194,24 +197,20 @@ public class SortedList<T> extends ArrayList<T> implements Cloneable {
 		return indexOf(element) != -1;
 	}
 	
-	private int getPos(T element, int left, int right) {
-		if (left == right)
-			return left;
-		int middle = left + (right - left) / 2;
-		if (comparator.compare(element, get(middle)) < 0) { //If it is smaller than the middle element
-			if (middle == 0)
-				return 0;
-			return getPos(element, left, middle);
+	private int getPos(T element) {
+		if (size() == 0)
+			return 0;
+		int left = 0, right = size(), middle = left + (right - left) / 2, cmp;
+		for (; left < right - 1; middle = left + (right - left) / 2) {
+			cmp = comparator.compare(element, get(middle));
+			if (cmp == 0)
+				return middle;
+			else if (cmp < 0)
+				right = middle;
+			else
+				left = middle + 1;
 		}
-		else if ((right - left) < 250 && comparator.compare(element, get(middle)) == 0) { //If these elements are the same, skip forward until it finds a different one
-			for (; middle < size() && comparator.compare(element, get(middle)) == 0; middle++);
-			return middle;
-		}
-		else { //If it is larger than the middle element
-			if (middle >= size() - 1)
-				return size();
-			return getPos(element, middle + 1, right);
-		}
+		return right;
 	}
 	
 	/**
