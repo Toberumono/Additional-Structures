@@ -3,6 +3,7 @@ package toberumono.structures.collections.lists;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 
 import toberumono.structures.SortingMethods;
 
@@ -128,9 +129,7 @@ public class SortedList<T> extends ArrayList<T> implements Cloneable {
 	public boolean add(T element) {
 		if (!sortingEnabled || comparator == null)
 			return super.add(element);
-		int pos = getPos(element);
-		for (;pos < size() - 1 && comparator.compare(element, get(pos + 1)) == 0; pos++);
-		super.add(pos, element);
+		super.add(insertionIndexOf(element), element);
 		return true;
 	}
 	
@@ -170,26 +169,49 @@ public class SortedList<T> extends ArrayList<T> implements Cloneable {
 			quickSort(0, size() - 1);
 	}
 	
-	/**
-	 * @param element
-	 *            the element of which to get the index
-	 * @return the index of the first occurrence of the specified element in this list, or -1 if this list does not contain
-	 *         the element.
-	 */
 	@Override
 	public int indexOf(Object element) {
 		if (size() == 0)
 			return -1;
 		try {
-			@SuppressWarnings("unchecked")
-			T e = (T) element;
+			@SuppressWarnings("unchecked") T e = (T) element;
 			int pos = getPos(e);
-			for (;pos > 0 && comparator.compare(e, get(pos - 1)) == 0; pos--); //getPos returns the index after the element's location in the list under certain circumstances
+			for (; pos > 0 && comparator.compare(e, get(pos - 1)) == 0; pos--); //getPos returns the index after the element's location in the list under certain circumstances
 			return pos < size() && comparator.compare(get(pos), e) == 0 ? pos : -1;
 		}
 		catch (ClassCastException e) {
 			return super.indexOf(element);
 		}
+	}
+	
+	@Override
+	public int lastIndexOf(Object element) {
+		try {
+			if (size() == 0)
+				return -1;
+			@SuppressWarnings("unchecked") T e = (T) element;
+			int pos = getPos(e);
+			for (; pos < size() - 1 && comparator.compare(e, get(pos + 1)) == 0; pos++);
+			return pos < size() && comparator.compare(get(pos), e) == 0 ? pos : -1;
+		}
+		catch (ClassCastException e) {
+			return super.indexOf(element);
+		}
+	}
+	
+	/**
+	 * Returns the index at which {@code element} would be placed in the {@link List} upon insertion.
+	 * 
+	 * @param element
+	 *            the element to insert
+	 * @return the index at which the {@code element} would be placed in the {@link List}
+	 */
+	public int insertionIndexOf(T element) {
+		if (size() == 0)
+			return 0;
+		int pos = getPos(element);
+		for (; pos < size() - 1 && comparator.compare(element, get(pos + 1)) == 0; pos++);
+		return pos;
 	}
 	
 	@Override
