@@ -214,7 +214,7 @@ public abstract class AbstractConsCell<C extends AbstractConsCell<C, T>, T exten
 		if (getPrevious() == previous)
 			return;
 		if (getPrevious() != null)
-			getPrevious().setCdrInner(null, null);
+			getPrevious().setCdrInner(null, getEmptyType());
 		setPreviousInner(previous);
 		return;
 	}
@@ -323,7 +323,7 @@ public abstract class AbstractConsCell<C extends AbstractConsCell<C, T>, T exten
 			getPrevious().setCdr(getCdr(), getCdrType());
 		else if (next != null)
 			next.setPreviousInner(null);
-		setCdrInner(null, null);
+		setCdrInner(null, getEmptyType());
 		return next;
 	}
 	
